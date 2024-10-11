@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -85,7 +86,7 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF1B1B1B)),
+            .background(colorResource(id = R.color.background_gray)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(40.dp))
@@ -113,7 +114,7 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(R.string.sign_up_email_description),
             fontSize = 14.sp,
-            color = Color(0xFFA3A3A3),
+            color = colorResource(id = R.color.text_default_gray),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 15.dp),
@@ -128,7 +129,7 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(R.string.sign_up_password_description),
             fontSize = 14.sp,
-            color = Color(0xFFA3A3A3),
+            color = colorResource(id = R.color.text_default_gray),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 15.dp),
@@ -139,7 +140,7 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(R.string.sign_up_social_service),
             fontSize = 14.sp,
-            color = Color(0xFFA3A3A3),
+            color = colorResource(id = R.color.text_default_gray),
             modifier = Modifier
                 .padding(horizontal = 15.dp),
         )
@@ -157,7 +158,7 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(R.string.sign_up_sns_description),
             fontSize = 12.sp,
-            color = Color(0xFFA3A3A3),
+            color = colorResource(id = R.color.text_default_gray),
             modifier = Modifier
                 .padding(horizontal = 15.dp),
         )
@@ -169,9 +170,9 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .background(color = Color(0xFF717171)),
+                .background(colorResource(id = R.color.sign_up_button_gray)),
             colors = ButtonDefaults.buttonColors(
-                Color(0xFF717171)
+                colorResource(id = R.color.sign_up_button_gray)
             )
         ) {
             Text(stringResource(R.string.sign_up_button))
@@ -203,7 +204,7 @@ fun isValidPassword(password: String): Boolean {
         }
     }
 
-    return password.length in 8..20 && listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3
+    return password.length in PASSWORD_MIN_LENGTH..PASSWORD_MAX_LENGTH && listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3
 }
 
 fun handleSignUp(context: Context, email: String, password: String) {
@@ -218,6 +219,9 @@ fun handleSignUp(context: Context, email: String, password: String) {
         Toast.makeText(context, "회원가입 실패", Toast.LENGTH_SHORT).show()
     }
 }
+
+const val PASSWORD_MIN_LENGTH = 8
+const val PASSWORD_MAX_LENGTH = 20
 
 @Preview(showBackground = true)
 @Composable

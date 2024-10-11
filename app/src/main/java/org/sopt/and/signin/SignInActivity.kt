@@ -33,9 +33,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
@@ -91,7 +91,7 @@ fun SignIn(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF1B1B1B))
+            .background(colorResource(R.color.background_gray))
             .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -131,7 +131,7 @@ fun SignIn(
                 .padding(horizontal = 20.dp)
                 .height(50.dp),
             colors = ButtonDefaults.buttonColors(
-                Color(0xFF1253FA)
+                colorResource(R.color.sign_in_button_blue)
             )
         ) {
             Text(stringResource(R.string.sign_in_button))
@@ -146,7 +146,7 @@ fun SignIn(
             Text(
                 text = stringResource(R.string.sign_in_to_find_id_button),
                 fontSize = 12.sp,
-                color = Color(0xFFA3A3A3),
+                color = colorResource(R.color.text_default_gray),
                 modifier = Modifier
                     .padding(horizontal = 5.dp),
             )
@@ -154,7 +154,7 @@ fun SignIn(
             Text(
                 text = stringResource(R.string.sign_in_slash),
                 fontSize = 12.sp,
-                color = Color(0xFFA3A3A3),
+                color = colorResource(R.color.text_default_gray),
                 modifier = Modifier
                     .padding(horizontal = 5.dp),
             )
@@ -162,7 +162,7 @@ fun SignIn(
             Text(
                 text = stringResource(R.string.sign_in_to_reset_password_button),
                 fontSize = 12.sp,
-                color = Color(0xFFA3A3A3),
+                color = colorResource(R.color.text_default_gray),
                 modifier = Modifier
                     .padding(horizontal = 5.dp),
             )
@@ -170,7 +170,7 @@ fun SignIn(
             Text(
                 text = stringResource(R.string.sign_in_slash),
                 fontSize = 12.sp,
-                color = Color(0xFFA3A3A3),
+                color = colorResource(R.color.text_default_gray),
                 modifier = Modifier
                     .padding(horizontal = 5.dp),
             )
@@ -178,7 +178,7 @@ fun SignIn(
             Text(
                 text = stringResource(R.string.sign_in_to_sign_up_button),
                 fontSize = 12.sp,
-                color = Color(0xFFA3A3A3),
+                color = colorResource(R.color.text_default_gray),
                 modifier = Modifier
                     .padding(horizontal = 5.dp)
                     .clickable {
@@ -192,7 +192,7 @@ fun SignIn(
         Text(
             text = stringResource(R.string.sign_in_social_service),
             fontSize = 14.sp,
-            color = Color(0xFFA3A3A3),
+            color = colorResource(R.color.text_default_gray),
             modifier = Modifier
                 .padding(horizontal = 15.dp),
         )
@@ -210,7 +210,7 @@ fun SignIn(
         Text(
             text = stringResource(R.string.sign_in_sns_description),
             fontSize = 12.sp,
-            color = Color(0xFFA3A3A3),
+            color = colorResource(R.color.text_default_gray),
             modifier = Modifier
                 .padding(horizontal = 15.dp),
         )

@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,7 +61,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF252525)),
+            .background(colorResource(R.color.my_page_top_background)),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Spacer(modifier = Modifier.height(40.dp))
@@ -69,7 +70,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(70.dp)
-                .background(color = Color(0xFF252525)),
+                .background(colorResource(R.color.my_page_top_background)),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -113,7 +114,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(R.string.my_page_first_month_description),
             fontSize = 16.sp,
-            color = Color(0xFFA7A7A7),
+            color = colorResource(R.color.my_page_description_title),
             lineHeight = 30.sp,
             modifier = Modifier
                 .padding(horizontal = 20.dp)
@@ -142,7 +143,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(R.string.my_page_no_license),
             fontSize = 16.sp,
-            color = Color(0xFFA7A7A7),
+            color = colorResource(R.color.my_page_description_title),
             lineHeight = 30.sp,
             modifier = Modifier
                 .padding(horizontal = 20.dp)
@@ -163,7 +164,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
 
         Column(
             modifier = Modifier
-                .background(Color(0xFF1B1B1B))
+                .background(colorResource(R.color.background_gray))
                 .fillMaxWidth()
                 .padding(vertical = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -191,7 +192,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
             Text(
                 text = stringResource(R.string.my_page_no_history),
                 fontSize = 12.sp,
-                color = Color(0xFFA7A7A7),
+                color = colorResource(R.color.my_page_description_title),
                 lineHeight = 30.sp,
             )
 
@@ -221,7 +222,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
             Text(
                 text = stringResource(R.string.my_page_no_interest_program),
                 fontSize = 12.sp,
-                color = Color(0xFFA7A7A7),
+                color = colorResource(R.color.my_page_description_title),
                 lineHeight = 30.sp,
                 modifier = Modifier
                     .padding(horizontal = 20.dp)
