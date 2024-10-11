@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,15 +15,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +37,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import org.sopt.and.R
 import org.sopt.and.component.EmailTextField
 import org.sopt.and.component.PasswordTextField
@@ -43,14 +48,24 @@ import org.sopt.and.signup.SignUpActivity
 import org.sopt.and.ui.theme.ANDANDROIDTheme
 
 class SignInActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        val registeredEmail = intent.getStringExtra("email")
+        val registeredPassword = intent.getStringExtra("password")
+
         setContent {
             ANDANDROIDTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                val snackbarHostState = remember { SnackbarHostState() }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+                ) { innerPadding ->
                     SignIn(
-                        name = "Android",
+                        registeredEmail = registeredEmail,
+                        registeredPassword = registeredPassword,
+                        snackbarHostState = snackbarHostState,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -60,16 +75,23 @@ class SignInActivity : ComponentActivity() {
 }
 
 @Composable
-fun SignIn(name: String, modifier: Modifier = Modifier) {
-    var id by remember { mutableStateOf("") }
+fun SignIn(
+    registeredEmail: String?,
+    registeredPassword: String?,
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier
+) {
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
 
     val context = LocalContext.current
 
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF1B1B1B)),
+            .background(color = Color(0xFF1B1B1B))
+            .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(40.dp))
@@ -78,7 +100,7 @@ fun SignIn(name: String, modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        EmailTextField(id = id, onValueChange = { id = it }, hint = "이메일 주소 또는 아이디")
+        EmailTextField(id = email, onValueChange = { email = it }, hint = "이메일 주소 또는 아이디")
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -88,8 +110,19 @@ fun SignIn(name: String, modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
-                Intent(context, MyActivity::class.java).apply {
-                    context.startActivity(this)
+                if (!registeredEmail.isNullOrBlank() && !registeredPassword.isNullOrBlank() && email == registeredEmail && password == registeredPassword) {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("로그인 성공")
+                        delay(1)
+                        Intent(context, MyActivity::class.java).apply {
+                            putExtra("email", email)
+                            context.startActivity(this)
+                        }
+                    }
+                } else {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("로그인 실패")
+                    }
                 }
             },
             modifier = Modifier
@@ -188,10 +221,10 @@ fun navigateToSignUp(context: Context) {
     context.startActivity(intent)
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SignInPreview() {
-    ANDANDROIDTheme {
-        SignIn("Android")
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun SignInPreview() {
+//    ANDANDROIDTheme {
+////        SignIn("android@gmail.com", "andsopt", "", "")
+//    }
+//}
