@@ -38,11 +38,14 @@ class MyActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val registeredEmail = intent.getStringExtra("email") ?: ""
+
         setContent {
             ANDANDROIDTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MyPage(
-                        name = "사용자 아이디",
+                        name = registeredEmail,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
