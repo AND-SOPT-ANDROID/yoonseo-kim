@@ -31,7 +31,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -47,14 +46,16 @@ import org.sopt.and.component.SignInTopBar
 import org.sopt.and.mypage.MyActivity
 import org.sopt.and.signup.SignUpActivity
 import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.utils.KeyStorage.EMAIL
+import org.sopt.and.utils.KeyStorage.PASSWORD
 
 class SignInActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val registeredEmail = intent.getStringExtra("email")
-        val registeredPassword = intent.getStringExtra("password")
+        val registeredEmail = intent.getStringExtra(EMAIL)
+        val registeredPassword = intent.getStringExtra(PASSWORD)
 
         setContent {
             ANDANDROIDTheme {
@@ -113,16 +114,16 @@ fun SignIn(
             onClick = {
                 if (!registeredEmail.isNullOrBlank() && !registeredPassword.isNullOrBlank() && email == registeredEmail && password == registeredPassword) {
                     scope.launch {
-                        snackbarHostState.showSnackbar("로그인 성공")
+                        snackbarHostState.showSnackbar(message = context.getString(R.string.sign_in_success))
                         delay(1)
                         Intent(context, MyActivity::class.java).apply {
-                            putExtra("email", email)
+                            putExtra(EMAIL, email)
                             context.startActivity(this)
                         }
                     }
                 } else {
                     scope.launch {
-                        snackbarHostState.showSnackbar("로그인 실패")
+                        snackbarHostState.showSnackbar(message = context.getString(R.string.sign_in_failure))
                     }
                 }
             },

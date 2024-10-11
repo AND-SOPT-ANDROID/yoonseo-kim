@@ -16,9 +16,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import org.sopt.and.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +35,7 @@ fun EmailTextField(id: String, onValueChange: (String) -> Unit, hint: String) {
             .fillMaxWidth()
             .padding(horizontal = 15.dp),
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color(0xFF2F2F2F),
+            containerColor = colorResource(R.color.text_field_container_background),
             focusedTextColor = Color.White,
             unfocusedTextColor = Color.White,
             focusedPlaceholderColor = Color.Gray,
@@ -55,7 +58,7 @@ fun PasswordTextField(password: String, onValueChange: (String) -> Unit, hint: S
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {
             Text(
-                text = if (passwordVisible) "hide" else "show",
+                text = if (passwordVisible) stringResource(R.string.text_field_hide) else stringResource(R.string.text_field_show),
                 color = Color.White,
                 modifier = Modifier
                     .clickable { passwordVisible = !passwordVisible }
@@ -63,7 +66,7 @@ fun PasswordTextField(password: String, onValueChange: (String) -> Unit, hint: S
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color(0xFF2F2F2F),
+            containerColor = colorResource(R.color.text_field_container_background),
             focusedTextColor = Color.White,
             unfocusedTextColor = Color.White,
             focusedPlaceholderColor = Color.Gray,

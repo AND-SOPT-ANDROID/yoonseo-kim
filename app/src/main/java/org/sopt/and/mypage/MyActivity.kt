@@ -35,13 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.sopt.and.R
 import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.utils.KeyStorage.EMAIL
 
 class MyActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val registeredEmail = intent.getStringExtra("email") ?: ""
+        val registeredEmail = intent.getStringExtra(EMAIL) ?: ""
 
         setContent {
             ANDANDROIDTheme {
@@ -77,7 +78,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
 
             Image(
                 painter = painterResource(id = R.drawable.ic_profile),
-                contentDescription = "profile image",
+                contentDescription = "Profile Image",
                 modifier = Modifier
                     .clip(CircleShape)
                     .padding(start = 20.dp)
@@ -86,7 +87,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.width(16.dp))
 
             Text(
-                text = "${name}님",
+                text = stringResource(R.string.my_page_profile_name, name),
                 fontSize = 18.sp,
                 color = Color.White,
                 modifier = Modifier.weight(1f)

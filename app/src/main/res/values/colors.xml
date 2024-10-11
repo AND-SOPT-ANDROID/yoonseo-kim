@@ -14,4 +14,5 @@
     <color name="sign_in_button_blue">#FF1253FA</color>
     <color name="my_page_top_background">#FF252525</color>
     <color name="my_page_description_title">#FFA7A7A7</color>
+    <color name="text_field_container_background">#FF2F2F2F</color>
 </resources>

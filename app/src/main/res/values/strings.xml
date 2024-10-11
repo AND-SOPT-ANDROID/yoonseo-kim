@@ -29,7 +29,7 @@
     <string name="sign_in_sns_description">- SNS계정으로 간편하게 가입하여 서비스를 이용하실 수 있습니다.\n 기존 POOQ 계정 또는 Wavve 계정과는 연동되지 않으니 이용에 참고하세요.</string>
 
     <!-- My Page -->
-    <string name="my_page_profile_name">님</string>
+    <string name="my_page_profile_name">%1$s님</string>
     <string name="my_page_first_month_description">첫 결제 시 첫 달 100원!</string>
     <string name="my_page_purchase">구매하기 ></string>
     <string name="my_page_no_license">현재 보유하신 이용권이 없습니다.</string>
@@ -37,4 +37,8 @@
     <string name="my_page_no_history">시청내역이 없어요.</string>
     <string name="my_page_interest_program">관심 프로그램</string>
     <string name="my_page_no_interest_program">관심 프로그램이 없어요.</string>
+
+    <!-- TextField -->
+    <string name="text_field_show">show</string>
+    <string name="text_field_hide">hide</string>
 </resources>

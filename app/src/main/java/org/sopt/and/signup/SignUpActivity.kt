@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -43,6 +42,13 @@ import org.sopt.and.component.PasswordTextField
 import org.sopt.and.component.SignUpTopBar
 import org.sopt.and.signin.SignInActivity
 import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.utils.KeyStorage.EMAIL
+import org.sopt.and.utils.KeyStorage.EMAIL_PATTERN
+import org.sopt.and.utils.KeyStorage.PASSWORD
+import org.sopt.and.utils.KeyStorage.PASSWORD_MAX_LENGTH
+import org.sopt.and.utils.KeyStorage.PASSWORD_MIN_LENGTH
+import org.sopt.and.utils.KeyStorage.PASSWORD_PATTERN
+import org.sopt.and.utils.toast
 import java.util.regex.Pattern
 
 class SignUpActivity : ComponentActivity() {
@@ -53,8 +59,8 @@ class SignUpActivity : ComponentActivity() {
 
         signUpResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val email = result.data?.getStringExtra("email")
-                val password = result.data?.getStringExtra("password")
+                val email = result.data?.getStringExtra(EMAIL)
+                val password = result.data?.getStringExtra(PASSWORD)
 
                 if (email != null && password != null) {
                     finish()
@@ -67,7 +73,6 @@ class SignUpActivity : ComponentActivity() {
             ANDANDROIDTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     SignUp(
-                        name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -77,7 +82,7 @@ class SignUpActivity : ComponentActivity() {
 }
 
 @Composable
-fun SignUp(name: String, modifier: Modifier = Modifier) {
+fun SignUp(modifier: Modifier = Modifier) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -181,7 +186,7 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
 }
 
 fun isValidEmail(email: String): Boolean {
-    val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+    val emailPattern = EMAIL_PATTERN
     return Pattern.matches(emailPattern, email)
 }
 
@@ -196,7 +201,7 @@ fun isValidPassword(password: String): Boolean {
             char.isLowerCase() -> hasLowercase = true
             char.isUpperCase() -> hasUppercase = true
             char.isDigit() -> hasDigit = true
-            "!@#$%^&*()-_=+[]{}|;:'\",.<>?/".contains(char) -> hasSpecialChar = true
+            PASSWORD_PATTERN.contains(char) -> hasSpecialChar = true
         }
 
         if (listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3) {
@@ -210,23 +215,20 @@ fun isValidPassword(password: String): Boolean {
 fun handleSignUp(context: Context, email: String, password: String) {
     if (isValidEmail(email) && isValidPassword(password)) {
         val intent = Intent(context, SignInActivity::class.java).apply {
-            putExtra("email", email)
-            putExtra("password", password)
+            putExtra(EMAIL, email)
+            putExtra(PASSWORD, password)
         }
         context.startActivity(intent)
-        Toast.makeText(context, "회원가입 성공", Toast.LENGTH_SHORT).show()
+        context.toast(context.getString(R.string.sign_up_success))
     } else {
-        Toast.makeText(context, "회원가입 실패", Toast.LENGTH_SHORT).show()
+        context.toast(context.getString(R.string.sign_up_failure))
     }
 }
-
-const val PASSWORD_MIN_LENGTH = 8
-const val PASSWORD_MAX_LENGTH = 20
 
 @Preview(showBackground = true)
 @Composable
 fun SignUpPreview() {
     ANDANDROIDTheme {
-        SignUp("Android")
+        SignUp()
     }
 }
