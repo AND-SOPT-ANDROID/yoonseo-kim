@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -110,7 +111,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(30.dp))
 
         Text(
-            text = "첫 결제 시 첫 달 100원!",
+            text = stringResource(R.string.my_page_first_month_description),
             fontSize = 16.sp,
             color = Color(0xFFA7A7A7),
             lineHeight = 30.sp,
@@ -120,7 +121,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
         )
 
         Text(
-            text = "구매하기 >",
+            text = stringResource(R.string.my_page_purchase),
             fontSize = 16.sp,
             color = Color.White,
             lineHeight = 30.sp,
@@ -139,7 +140,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "현재 보유하신 이용권이 없습니다.",
+            text = stringResource(R.string.my_page_no_license),
             fontSize = 16.sp,
             color = Color(0xFFA7A7A7),
             lineHeight = 30.sp,
@@ -149,7 +150,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
         )
 
         Text(
-            text = "구매하기 >",
+            text = stringResource(R.string.my_page_purchase),
             fontSize = 16.sp,
             color = Color.White,
             lineHeight = 30.sp,
@@ -169,7 +170,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
         ) {
 
             Text(
-                text = "전체 시청내역",
+                text = stringResource(R.string.my_page_whole_history),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -188,7 +189,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
             )
 
             Text(
-                text = "시청내역이 없어요.",
+                text = stringResource(R.string.my_page_no_history),
                 fontSize = 12.sp,
                 color = Color(0xFFA7A7A7),
                 lineHeight = 30.sp,
@@ -197,7 +198,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "관심 프로그램",
+                text = stringResource(R.string.my_page_interest_program),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -218,7 +219,7 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
             )
 
             Text(
-                text = "관심 프로그램이 없어요.",
+                text = stringResource(R.string.my_page_no_interest_program),
                 fontSize = 12.sp,
                 color = Color(0xFFA7A7A7),
                 lineHeight = 30.sp,
@@ -235,6 +236,6 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun MyPreview() {
     ANDANDROIDTheme {
-        MyPage("사용자 아이디")
+        MyPage(stringResource(R.string.my_page_profile_name))
     }
 }

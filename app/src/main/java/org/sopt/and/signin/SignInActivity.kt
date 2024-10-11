@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -96,15 +97,15 @@ fun SignIn(
     ) {
         Spacer(modifier = Modifier.height(40.dp))
 
-        SignInTopBar("Wavve")
+        SignInTopBar(stringResource(R.string.sign_in_top_bar))
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        EmailTextField(id = email, onValueChange = { email = it }, hint = "이메일 주소 또는 아이디")
+        EmailTextField(id = email, onValueChange = { email = it }, hint = stringResource(R.string.sign_in_email_hint))
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        PasswordTextField(password = password, onValueChange = { password = it }, hint = "비밀번호")
+        PasswordTextField(password = password, onValueChange = { password = it }, hint = stringResource(R.string.sign_in_password_hint))
 
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -133,7 +134,7 @@ fun SignIn(
                 Color(0xFF1253FA)
             )
         ) {
-            Text("로그인")
+            Text(stringResource(R.string.sign_in_button))
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -143,7 +144,7 @@ fun SignIn(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "아이디 찾기",
+                text = stringResource(R.string.sign_in_to_find_id_button),
                 fontSize = 12.sp,
                 color = Color(0xFFA3A3A3),
                 modifier = Modifier
@@ -151,7 +152,7 @@ fun SignIn(
             )
 
             Text(
-                text = "|",
+                text = stringResource(R.string.sign_in_slash),
                 fontSize = 12.sp,
                 color = Color(0xFFA3A3A3),
                 modifier = Modifier
@@ -159,7 +160,7 @@ fun SignIn(
             )
 
             Text(
-                text = "비밀번호 재설정",
+                text = stringResource(R.string.sign_in_to_reset_password_button),
                 fontSize = 12.sp,
                 color = Color(0xFFA3A3A3),
                 modifier = Modifier
@@ -167,7 +168,7 @@ fun SignIn(
             )
 
             Text(
-                text = "|",
+                text = stringResource(R.string.sign_in_slash),
                 fontSize = 12.sp,
                 color = Color(0xFFA3A3A3),
                 modifier = Modifier
@@ -175,7 +176,7 @@ fun SignIn(
             )
 
             Text(
-                text = "회원가입",
+                text = stringResource(R.string.sign_in_to_sign_up_button),
                 fontSize = 12.sp,
                 color = Color(0xFFA3A3A3),
                 modifier = Modifier
@@ -189,7 +190,7 @@ fun SignIn(
         Spacer(modifier = Modifier.height(30.dp))
 
         Text(
-            text = "또는 다른 서비스 계정으로 로그인",
+            text = stringResource(R.string.sign_in_social_service),
             fontSize = 14.sp,
             color = Color(0xFFA3A3A3),
             modifier = Modifier
@@ -207,7 +208,7 @@ fun SignIn(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "- SNS계정으로 간편하게 가입하여 서비스를 이용하실 수 있습니다.\n 기존 POOQ 계정 또는 Wavve 계정과는 연동되지 않으니 이용에 참고하세요.",
+            text = stringResource(R.string.sign_in_sns_description),
             fontSize = 12.sp,
             color = Color(0xFFA3A3A3),
             modifier = Modifier
@@ -220,11 +221,3 @@ fun navigateToSignUp(context: Context) {
     val intent = Intent(context, SignUpActivity::class.java)
     context.startActivity(intent)
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun SignInPreview() {
-//    ANDANDROIDTheme {
-////        SignIn("android@gmail.com", "andsopt", "", "")
-//    }
-//}

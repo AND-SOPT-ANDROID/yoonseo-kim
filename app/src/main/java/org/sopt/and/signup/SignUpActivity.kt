@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -89,12 +90,12 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
     ) {
         Spacer(modifier = Modifier.height(40.dp))
 
-        SignUpTopBar("회원가입")
+        SignUpTopBar(stringResource(R.string.sign_up_top_bar))
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "이메일과 비밀번호만으로\nWavve를 즐길 수 있어요!",
+            text = stringResource(R.string.sign_up_title),
             fontSize = 20.sp,
             color = Color.White,
             lineHeight = 30.sp,
@@ -105,12 +106,12 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        EmailTextField(id = email, onValueChange = { email = it }, hint = "wavve@example.com")
+        EmailTextField(id = email, onValueChange = { email = it }, hint = stringResource(R.string.sign_up_email_hint))
 
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "!! 로그인, 비밀번호 찾기, 알림에 사용되니 정확한 이메일을 입력해 주세요.",
+            text = stringResource(R.string.sign_up_email_description),
             fontSize = 14.sp,
             color = Color(0xFFA3A3A3),
             modifier = Modifier
@@ -120,12 +121,12 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        PasswordTextField(password = password, onValueChange = { password = it }, hint = "Wavve 비밀번호 설정")
+        PasswordTextField(password = password, onValueChange = { password = it }, hint = stringResource(R.string.sign_up_password_hint))
 
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "!! 비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용하여 입력해 주세요.",
+            text = stringResource(R.string.sign_up_password_description),
             fontSize = 14.sp,
             color = Color(0xFFA3A3A3),
             modifier = Modifier
@@ -136,7 +137,7 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(30.dp))
 
         Text(
-            text = "또는 다른 서비스로 가입",
+            text = stringResource(R.string.sign_up_social_service),
             fontSize = 14.sp,
             color = Color(0xFFA3A3A3),
             modifier = Modifier
@@ -154,7 +155,7 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "- SNS계정으로 간편하게 가입하여 서비스를 이용하실 수 있습니다. 기존 POOQ 계정 또는 Wavve 계정과는 연동되지 않으니 이용에 참고하세요.",
+            text = stringResource(R.string.sign_up_sns_description),
             fontSize = 12.sp,
             color = Color(0xFFA3A3A3),
             modifier = Modifier
@@ -173,7 +174,7 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
                 Color(0xFF717171)
             )
         ) {
-            Text("Wavve 회원가입")
+            Text(stringResource(R.string.sign_up_button))
         }
     }
 }
