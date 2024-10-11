@@ -1,10 +1,15 @@
 package org.sopt.and.signup
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -36,10 +41,25 @@ import org.sopt.and.component.PasswordTextField
 import org.sopt.and.component.SignUpTopBar
 import org.sopt.and.signin.SignInActivity
 import org.sopt.and.ui.theme.ANDANDROIDTheme
+import java.util.regex.Pattern
 
 class SignUpActivity : ComponentActivity() {
+    private lateinit var signUpResultLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        signUpResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val email = result.data?.getStringExtra("email")
+                val password = result.data?.getStringExtra("password")
+
+                if (email != null && password != null) {
+                    finish()
+                }
+            }
+        }
+
         enableEdgeToEdge()
         setContent {
             ANDANDROIDTheme {
@@ -56,7 +76,7 @@ class SignUpActivity : ComponentActivity() {
 
 @Composable
 fun SignUp(name: String, modifier: Modifier = Modifier) {
-    var id by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     val context = LocalContext.current
@@ -85,7 +105,7 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        EmailTextField(id = id, onValueChange = { id = it }, hint = "wavve@example.com")
+        EmailTextField(id = email, onValueChange = { email = it }, hint = "wavve@example.com")
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -144,11 +164,7 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
-            onClick = {
-                Intent(context, SignInActivity::class.java).apply {
-                    context.startActivity(this)
-                }
-            },
+            onClick = { handleSignUp(context, email, password) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
@@ -159,6 +175,46 @@ fun SignUp(name: String, modifier: Modifier = Modifier) {
         ) {
             Text("Wavve 회원가입")
         }
+    }
+}
+
+fun isValidEmail(email: String): Boolean {
+    val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+    return Pattern.matches(emailPattern, email)
+}
+
+fun isValidPassword(password: String): Boolean {
+    var hasLowercase = false
+    var hasUppercase = false
+    var hasDigit = false
+    var hasSpecialChar = false
+
+    for (char in password) {
+        when {
+            char.isLowerCase() -> hasLowercase = true
+            char.isUpperCase() -> hasUppercase = true
+            char.isDigit() -> hasDigit = true
+            "!@#$%^&*()-_=+[]{}|;:'\",.<>?/".contains(char) -> hasSpecialChar = true
+        }
+
+        if (listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3) {
+            break
+        }
+    }
+
+    return password.length in 8..20 && listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3
+}
+
+fun handleSignUp(context: Context, email: String, password: String) {
+    if (isValidEmail(email) && isValidPassword(password)) {
+        val intent = Intent(context, SignInActivity::class.java).apply {
+            putExtra("email", email)
+            putExtra("password", password)
+        }
+        context.startActivity(intent)
+        Toast.makeText(context, "회원가입 성공", Toast.LENGTH_SHORT).show()
+    } else {
+        Toast.makeText(context, "회원가입 실패", Toast.LENGTH_SHORT).show()
     }
 }
 
