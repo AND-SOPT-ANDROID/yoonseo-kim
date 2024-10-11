@@ -76,10 +76,3 @@ fun SignInTopBar(text: String) {
         )
     }
 }
-
-@Preview
-@Composable
-fun TopBarPreview() {
-    // SignUpTopBar("회원가입")
-    SignInTopBar("Wavve")
-}
