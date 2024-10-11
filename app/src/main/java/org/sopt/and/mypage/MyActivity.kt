@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.sopt.and.R
+import org.sopt.and.component.MyPageBox
 import org.sopt.and.ui.theme.ANDANDROIDTheme
 import org.sopt.and.utils.KeyStorage.EMAIL
 
@@ -166,67 +167,22 @@ fun MyPage(name: String, modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .background(colorResource(R.color.background_gray))
-                .fillMaxWidth()
-                .padding(vertical = 20.dp),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Text(
-                text = stringResource(R.string.my_page_whole_history),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                lineHeight = 30.sp,
-                modifier = Modifier
-                    .padding(horizontal = 20.dp)
-                    .fillMaxWidth()
-            )
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_exclamation),
-                contentDescription = "logo images",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .size(70.dp)
-            )
-
-            Text(
-                text = stringResource(R.string.my_page_no_history),
-                fontSize = 12.sp,
-                color = colorResource(R.color.my_page_description_title),
-                lineHeight = 30.sp,
+            MyPageBox(
+                title = stringResource(R.string.my_page_whole_history),
+                description = stringResource(R.string.my_page_no_history),
+                imageResId = R.drawable.ic_exclamation
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Text(
-                text = stringResource(R.string.my_page_interest_program),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                lineHeight = 30.sp,
-                modifier = Modifier
-                    .padding(horizontal = 20.dp)
-                    .fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_exclamation),
-                contentDescription = "logo images",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .size(70.dp)
-            )
-
-            Text(
-                text = stringResource(R.string.my_page_no_interest_program),
-                fontSize = 12.sp,
-                color = colorResource(R.color.my_page_description_title),
-                lineHeight = 30.sp,
-                modifier = Modifier
-                    .padding(horizontal = 20.dp)
+            MyPageBox(
+                title = stringResource(R.string.my_page_interest_program),
+                description = stringResource(R.string.my_page_no_interest_program),
+                imageResId = R.drawable.ic_exclamation
             )
 
             Spacer(modifier = Modifier.weight(1f))
