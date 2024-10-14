@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ANDANDROIDTheme {
                 val context = LocalContext.current
-                Intent(context, SignInActivity::class.java).apply {
+                Intent(context, SignInActivity::class.java).run {
                     context.startActivity(this)
                 }
             }
