@@ -1,14 +1,11 @@
 package org.sopt.and.signup
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -40,7 +37,6 @@ import org.sopt.and.R
 import org.sopt.and.component.EmailTextField
 import org.sopt.and.component.PasswordTextField
 import org.sopt.and.component.SignUpTopBar
-import org.sopt.and.signin.SignInActivity
 import org.sopt.and.ui.theme.ANDANDROIDTheme
 import org.sopt.and.utils.KeyStorage.EMAIL
 import org.sopt.and.utils.KeyStorage.EMAIL_PATTERN
@@ -52,37 +48,36 @@ import org.sopt.and.utils.toast
 import java.util.regex.Pattern
 
 class SignUpActivity : ComponentActivity() {
-    private lateinit var signUpResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        signUpResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val email = result.data?.getStringExtra(EMAIL)
-                val password = result.data?.getStringExtra(PASSWORD)
-
-                if (email != null && password != null) {
-                    finish()
-                }
-            }
-        }
-
         enableEdgeToEdge()
         setContent {
             ANDANDROIDTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     SignUp(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        onSignUpSuccess = { email, password ->
+                            handleSignUp(email, password)
+                        }
                     )
                 }
             }
         }
     }
+
+    private fun handleSignUp(email: String, password: String) {
+        val intent = Intent().apply {
+            putExtra(EMAIL, email)
+            putExtra(PASSWORD, password)
+        }
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
 }
 
 @Composable
-fun SignUp(modifier: Modifier = Modifier) {
+fun SignUp(modifier: Modifier = Modifier, onSignUpSuccess: (String, String) -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -171,7 +166,14 @@ fun SignUp(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
-            onClick = { handleSignUp(context, email, password) },
+            onClick = {
+                if (isValidEmail(email) && isValidPassword(password)) {
+                    onSignUpSuccess(email, password)
+                    context.toast(context.getString(R.string.sign_up_success))
+                } else {
+                    context.toast(context.getString(R.string.sign_up_failure))
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
@@ -212,23 +214,14 @@ fun isValidPassword(password: String): Boolean {
     return password.length in PASSWORD_MIN_LENGTH..PASSWORD_MAX_LENGTH && listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3
 }
 
-fun handleSignUp(context: Context, email: String, password: String) {
-    if (isValidEmail(email) && isValidPassword(password)) {
-        val intent = Intent(context, SignInActivity::class.java).apply {
-            putExtra(EMAIL, email)
-            putExtra(PASSWORD, password)
-        }
-        context.startActivity(intent)
-        context.toast(context.getString(R.string.sign_up_success))
-    } else {
-        context.toast(context.getString(R.string.sign_up_failure))
-    }
-}
+
 
 @Preview(showBackground = true)
 @Composable
 fun SignUpPreview() {
     ANDANDROIDTheme {
-        SignUp()
+        SignUp(
+            onSignUpSuccess = { _, _ -> }
+        )
     }
 }

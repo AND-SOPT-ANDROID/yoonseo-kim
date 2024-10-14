@@ -1,10 +1,11 @@
 package org.sopt.and.signin
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,11 +52,19 @@ import org.sopt.and.utils.KeyStorage.PASSWORD
 
 class SignInActivity : ComponentActivity() {
 
+    private lateinit var signInResultLauncher: ActivityResultLauncher<Intent>
+    private var registeredEmail by mutableStateOf("")
+    private var registeredPassword by mutableStateOf("")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val registeredEmail = intent.getStringExtra(EMAIL)
-        val registeredPassword = intent.getStringExtra(PASSWORD)
+        signInResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                registeredEmail = result.data?.getStringExtra(EMAIL) ?: ""
+                registeredPassword = result.data?.getStringExtra(PASSWORD) ?: ""
+            }
+        }
 
         setContent {
             ANDANDROIDTheme {
@@ -68,11 +77,17 @@ class SignInActivity : ComponentActivity() {
                         registeredEmail = registeredEmail,
                         registeredPassword = registeredPassword,
                         snackbarHostState = snackbarHostState,
+                        onSignUpClick = { navigateToSignUp() },
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
+    }
+
+    private fun navigateToSignUp() {
+        val intent = Intent(this, SignUpActivity::class.java)
+        signInResultLauncher.launch(intent)
     }
 }
 
@@ -81,6 +96,7 @@ fun SignIn(
     registeredEmail: String?,
     registeredPassword: String?,
     snackbarHostState: SnackbarHostState,
+    onSignUpClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var email by remember { mutableStateOf("") }
@@ -183,7 +199,7 @@ fun SignIn(
                 modifier = Modifier
                     .padding(horizontal = 5.dp)
                     .clickable {
-                        navigateToSignUp(context)
+                        onSignUpClick()
                     },
             )
         }
@@ -218,7 +234,4 @@ fun SignIn(
     }
 }
 
-fun navigateToSignUp(context: Context) {
-    val intent = Intent(context, SignUpActivity::class.java)
-    context.startActivity(intent)
-}
+
