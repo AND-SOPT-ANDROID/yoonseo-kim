@@ -23,6 +23,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".signup.SignUpActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".signin.SignInActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".mypage.MyActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>
