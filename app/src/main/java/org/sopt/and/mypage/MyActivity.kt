@@ -41,7 +41,7 @@ class MyActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val registeredEmail = intent.getStringExtra(EMAIL) ?: ""
+        val registeredEmail = intent.getStringExtra(EMAIL).orEmpty()
 
         setContent {
             ANDANDROIDTheme {
@@ -57,7 +57,10 @@ class MyActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyPage(name: String, modifier: Modifier = Modifier) {
+fun MyPage(
+    name: String,
+    modifier: Modifier = Modifier
+) {
     Column (
         modifier = Modifier
             .fillMaxSize()

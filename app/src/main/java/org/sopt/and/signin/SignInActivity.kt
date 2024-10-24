@@ -41,9 +41,8 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import org.sopt.and.R
-import org.sopt.and.component.EmailTextField
-import org.sopt.and.component.PasswordTextField
 import org.sopt.and.component.SignInTopBar
+import org.sopt.and.component.WavveCustomTextField
 import org.sopt.and.mypage.MyActivity
 import org.sopt.and.signup.SignUpActivity
 import org.sopt.and.ui.theme.ANDANDROIDTheme
@@ -61,8 +60,8 @@ class SignInActivity : ComponentActivity() {
 
         signInResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                registeredEmail = result.data?.getStringExtra(EMAIL) ?: ""
-                registeredPassword = result.data?.getStringExtra(PASSWORD) ?: ""
+                registeredEmail = result.data?.getStringExtra(EMAIL).orEmpty()
+                registeredPassword = result.data?.getStringExtra(PASSWORD).orEmpty()
             }
         }
 
@@ -118,11 +117,11 @@ fun SignIn(
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        EmailTextField(id = email, onValueChange = { email = it }, hint = stringResource(R.string.sign_in_email_hint))
+        WavveCustomTextField(value = email, onValueChange = { email = it }, hint = stringResource(R.string.sign_in_email_hint))
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        PasswordTextField(password = password, onValueChange = { password = it }, hint = stringResource(R.string.sign_in_password_hint))
+        WavveCustomTextField(value = password, onValueChange = { password = it }, hint = stringResource(R.string.sign_in_password_hint), isPasswordField = true)
 
         Spacer(modifier = Modifier.height(30.dp))
 

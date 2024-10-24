@@ -34,9 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.sopt.and.R
-import org.sopt.and.component.EmailTextField
-import org.sopt.and.component.PasswordTextField
 import org.sopt.and.component.SignUpTopBar
+import org.sopt.and.component.WavveCustomTextField
 import org.sopt.and.ui.theme.ANDANDROIDTheme
 import org.sopt.and.utils.KeyStorage.EMAIL
 import org.sopt.and.utils.KeyStorage.EMAIL_PATTERN
@@ -77,7 +76,10 @@ class SignUpActivity : ComponentActivity() {
 }
 
 @Composable
-fun SignUp(modifier: Modifier = Modifier, onSignUpSuccess: (String, String) -> Unit) {
+fun SignUp(
+    modifier: Modifier = Modifier,
+    onSignUpSuccess: (email: String, password: String) -> Unit
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -107,7 +109,7 @@ fun SignUp(modifier: Modifier = Modifier, onSignUpSuccess: (String, String) -> U
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        EmailTextField(id = email, onValueChange = { email = it }, hint = stringResource(R.string.sign_up_email_hint))
+        WavveCustomTextField(value = email, onValueChange = { email = it }, hint = stringResource(R.string.sign_up_email_hint))
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -122,7 +124,7 @@ fun SignUp(modifier: Modifier = Modifier, onSignUpSuccess: (String, String) -> U
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        PasswordTextField(password = password, onValueChange = { password = it }, hint = stringResource(R.string.sign_up_password_hint))
+        WavveCustomTextField(value = password, onValueChange = { password = it }, hint = stringResource(R.string.sign_up_password_hint), isPasswordField = true)
 
         Spacer(modifier = Modifier.height(10.dp))
 

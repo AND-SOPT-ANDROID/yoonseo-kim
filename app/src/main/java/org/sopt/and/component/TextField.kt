@@ -23,48 +23,37 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import org.sopt.and.R
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EmailTextField(id: String, onValueChange: (String) -> Unit, hint: String) {
-    OutlinedTextField(
-        value = id,
-        onValueChange = onValueChange,
-        placeholder = { Text(hint) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 15.dp),
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = colorResource(R.color.text_field_container_background),
-            focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White,
-            focusedPlaceholderColor = Color.Gray,
-            unfocusedPlaceholderColor = Color.Gray,
-        )
-    )
-}
-
-@Composable
-fun PasswordTextField(password: String, onValueChange: (String) -> Unit, hint: String) {
+fun WavveCustomTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    hint: String,
+    modifier: Modifier = Modifier,
+    isPasswordField: Boolean = false
+) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     OutlinedTextField(
-        value = password,
+        value = value,
         onValueChange = onValueChange,
         placeholder = { Text(hint) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 15.dp),
-        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        trailingIcon = {
-            Text(
-                text = if (passwordVisible) stringResource(R.string.text_field_hide) else stringResource(R.string.text_field_show),
-                color = Color.White,
-                modifier = Modifier
-                    .clickable { passwordVisible = !passwordVisible }
-                    .padding(8.dp)
-            )
-        },
+        visualTransformation = if (isPasswordField && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
+        trailingIcon =
+            if (isPasswordField) {
+                {
+                    Text(
+                        text = if (passwordVisible) stringResource(R.string.text_field_hide) else stringResource(R.string.text_field_show),
+                        color = Color.White,
+                        modifier = Modifier
+                            .clickable { passwordVisible = !passwordVisible }
+                            .padding(8.dp)
+                    )
+                }
+            } else null,
         colors = TextFieldDefaults.textFieldColors(
             containerColor = colorResource(R.color.text_field_container_background),
             focusedTextColor = Color.White,
