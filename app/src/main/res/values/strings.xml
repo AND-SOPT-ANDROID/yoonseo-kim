@@ -1,3 +1,44 @@
 <resources>
     <string name="app_name">AND-ANDROID</string>
+
+    <!-- Sign Up -->
+    <string name="sign_up_top_bar">회원가입</string>
+    <string name="sign_up_title">이메일과 비밀번호만으로\nWavve를 즐길 수 있어요!</string>
+    <string name="sign_up_email_hint">wavve@example.com</string>
+    <string name="sign_up_email_description">!! 로그인, 비밀번호 찾기, 알림에 사용되니 정확한 이메일을 입력해 주세요.</string>
+    <string name="sign_up_password_hint">Wavve 비밀번호 설정</string>
+    <string name="sign_up_password_description">!! 비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용하여 입력해 주세요.</string>
+    <string name="sign_up_social_service">또는 다른 서비스로 가입</string>
+    <string name="sign_up_sns_description">- SNS계정으로 간편하게 가입하여 서비스를 이용하실 수 있습니다. 기존 POOQ 계정 또는 Wavve 계정과는 연동되지 않으니 이용에 참고하세요.</string>
+    <string name="sign_up_button">Wavve 회원가입</string>
+    <string name="sign_up_success">회원가입 성공</string>
+    <string name="sign_up_failure">회원가입 실패</string>
+
+    <!-- Sign In -->
+    <string name="sign_in_top_bar">Wavve</string>
+    <string name="sign_in_email_hint">이메일 주소 또는 아이디</string>
+    <string name="sign_in_password_hint">비밀번호</string>
+    <string name="sign_in_success">로그인 성공</string>
+    <string name="sign_in_failure">로그인 실패</string>
+    <string name="sign_in_button">로그인</string>
+    <string name="sign_in_to_find_id_button">아이디 찾기</string>
+    <string name="sign_in_slash">|</string>
+    <string name="sign_in_to_reset_password_button">비밀번호 재설정</string>
+    <string name="sign_in_to_sign_up_button">회원가입</string>
+    <string name="sign_in_social_service">또는 다른 서비스 계정으로 로그인</string>
+    <string name="sign_in_sns_description">- SNS계정으로 간편하게 가입하여 서비스를 이용하실 수 있습니다.\n 기존 POOQ 계정 또는 Wavve 계정과는 연동되지 않으니 이용에 참고하세요.</string>
+
+    <!-- My Page -->
+    <string name="my_page_profile_name">%1$s님</string>
+    <string name="my_page_first_month_description">첫 결제 시 첫 달 100원!</string>
+    <string name="my_page_purchase">구매하기 ></string>
+    <string name="my_page_no_license">현재 보유하신 이용권이 없습니다.</string>
+    <string name="my_page_whole_history">전체 시청내역</string>
+    <string name="my_page_no_history">시청내역이 없어요.</string>
+    <string name="my_page_interest_program">관심 프로그램</string>
+    <string name="my_page_no_interest_program">관심 프로그램이 없어요.</string>
+
+    <!-- TextField -->
+    <string name="text_field_show">show</string>
+    <string name="text_field_hide">hide</string>
 </resources>
