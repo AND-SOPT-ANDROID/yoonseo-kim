@@ -24,21 +24,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 import org.sopt.and.R
+import org.sopt.and.feature.home.HomeViewModel
 
 @Composable
 fun AutoSlidingRow(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = viewModel()
 ) {
-    val images = listOf(
-        R.drawable.ic_poster1,
-        R.drawable.ic_poster2,
-        R.drawable.ic_poster3,
-        R.drawable.ic_poster4,
-        R.drawable.ic_poster5,
-        R.drawable.ic_poster6
-    )
+    val images = homeViewModel.autoSlidingImages
     var currentIndex by remember { mutableStateOf(0) }
     val totalImages = images.size
 

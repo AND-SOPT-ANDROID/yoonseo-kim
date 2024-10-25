@@ -18,24 +18,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
+import org.sopt.and.feature.home.HomeViewModel
 
 @Composable
 fun RecommendationRow(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = viewModel()
 ) {
-    val images = listOf(
-        R.drawable.ic_poster10,
-        R.drawable.ic_poster9,
-        R.drawable.ic_poster8,
-        R.drawable.ic_poster7,
-        R.drawable.ic_poster6,
-        R.drawable.ic_poster5,
-        R.drawable.ic_poster4,
-        R.drawable.ic_poster3,
-        R.drawable.ic_poster2,
-        R.drawable.ic_poster1
-    )
+    val images = homeViewModel.recommendationImages
 
     Row(
         modifier = Modifier
