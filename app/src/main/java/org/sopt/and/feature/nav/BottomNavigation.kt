@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import org.sopt.and.R
 import org.sopt.and.feature.home.HomeScreen
 import org.sopt.and.feature.mypage.MyPageScreen
+import org.sopt.and.feature.mypage.MyPageViewModel
 import org.sopt.and.feature.search.SearchScreen
 import org.sopt.and.model.BottomNavItem
 
@@ -71,7 +72,7 @@ fun BottomNavigation(
                 SearchScreen()
             }
             composable(BottomNavItem.MyPage.route) {
-                MyPageScreen(registeredEmail = registeredEmail)
+                MyPageScreen(registeredEmail = registeredEmail, viewModel = MyPageViewModel())
             }
         }
     }

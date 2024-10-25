@@ -13,9 +13,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.sopt.and.R
 import org.sopt.and.component.SignUpTopBar
@@ -39,9 +37,9 @@ import java.util.regex.Pattern
 @Composable
 fun SignUpScreen(
     navController: NavHostController,
-    viewModel: SignUpViewModel,
     modifier: Modifier = Modifier,
-    onSignUpSuccess: (email: String, password: String) -> Unit
+    onSignUpSuccess: (email: String, password: String) -> Unit,
+    viewModel: SignUpViewModel = viewModel(),
 ) {
     val email by viewModel.email
     val password by viewModel.password
@@ -72,7 +70,11 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        WavveCustomTextField(value = email, onValueChange = viewModel::onEmailChange, hint = stringResource(R.string.sign_up_email_hint))
+        WavveCustomTextField(
+            value = email,
+            onValueChange = { viewModel.updateEmail(it) },
+            hint = stringResource(R.string.sign_up_email_hint)
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -87,8 +89,12 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        WavveCustomTextField(value = password, onValueChange = viewModel::onPasswordChange, hint = stringResource(
-            R.string.sign_up_password_hint), isPasswordField = true)
+        WavveCustomTextField(
+            value = password,
+            onValueChange = { viewModel.updatePassword(it) },
+            hint = stringResource(R.string.sign_up_password_hint),
+            isPasswordField = true
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 

@@ -12,20 +12,20 @@ class SignUpViewModel : ViewModel() {
     var email = mutableStateOf("")
     var password = mutableStateOf("")
 
-    fun onEmailChange(newEmail: String) {
+    fun updateEmail(newEmail: String) {
         email.value = newEmail
     }
 
-    fun onPasswordChange(newPassword: String) {
+    fun updatePassword(newPassword: String) {
         password.value = newPassword
     }
 
-    fun isValidEmail(): Boolean {
+    private fun isValidEmail(): Boolean {
         val emailPattern = EMAIL_PATTERN
         return Pattern.matches(emailPattern, email.value)
     }
 
-    fun isValidPassword(): Boolean {
+    private fun isValidPassword(): Boolean {
         var hasLowercase = false
         var hasUppercase = false
         var hasDigit = false
@@ -48,10 +48,7 @@ class SignUpViewModel : ViewModel() {
                 listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3
     }
 
-    fun signUp(
-        onSuccess: (String, String) -> Unit,
-        onFailure: () -> Unit
-    ) {
+    fun signUp(onSuccess: (String, String) -> Unit, onFailure: () -> Unit) {
         if (isValidEmail() && isValidPassword()) {
             onSuccess(email.value, password.value)
         } else {

@@ -19,7 +19,9 @@ import org.sopt.and.component.TabMenu
 import org.sopt.and.component.TodayTop20Row
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()

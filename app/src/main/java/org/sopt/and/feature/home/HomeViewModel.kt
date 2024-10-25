@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import org.sopt.and.R
 
 class HomeViewModel : ViewModel() {
+
     val autoSlidingImages = listOf(
         R.drawable.ic_poster1,
         R.drawable.ic_poster2,
