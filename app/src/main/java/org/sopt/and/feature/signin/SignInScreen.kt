@@ -20,10 +20,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.component.SignInTopBar
@@ -48,10 +44,11 @@ fun SignInScreen(
     snackbarHostState: SnackbarHostState,
     onSignUpClick: () -> Unit,
     onSignInSuccess: (String) -> Unit,
+    viewModel: SignInViewModel,
     modifier: Modifier = Modifier
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val email by viewModel.email
+    val password by viewModel.password
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -67,15 +64,15 @@ fun SignInScreen(
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            SignInTopBar(stringResource(R.string.sign_in_top_bar))
+            SignInTopBar()
 
             Spacer(modifier = Modifier.height(50.dp))
 
             WavveCustomTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = viewModel::onEmailChanged,
                 hint = stringResource(R.string.sign_in_email_hint)
             )
 
@@ -83,7 +80,7 @@ fun SignInScreen(
 
             WavveCustomTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = viewModel::onPasswordChanged,
                 hint = stringResource(R.string.sign_in_password_hint),
                 isPasswordField = true
             )
@@ -92,12 +89,12 @@ fun SignInScreen(
 
             Button(
                 onClick = {
-                    if (!registeredEmail.isNullOrBlank() && !registeredPassword.isNullOrBlank() && email == registeredEmail && password == registeredPassword) {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(message = context.getString(R.string.sign_in_success))
-                            delay(100)
+                    viewModel.signIn(
+                        registeredEmail = registeredEmail,
+                        registeredPassword = registeredPassword,
+                        snackbarHostState = snackbarHostState,
+                        onSuccess = { email ->
                             onSignInSuccess(email)
-
                             navController.navigate(BottomNavItem.Home.route) {
                                 popUpTo(navController.graph.startDestinationId) {
                                     saveState = true
@@ -105,12 +102,13 @@ fun SignInScreen(
                                 launchSingleTop = true
                                 restoreState = true
                             }
+                        },
+                        onFailure = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(message = context.getString(R.string.sign_in_failure))
+                            }
                         }
-                    } else {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(message = context.getString(R.string.sign_in_failure))
-                        }
-                    }
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()

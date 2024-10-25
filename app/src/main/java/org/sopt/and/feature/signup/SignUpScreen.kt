@@ -39,11 +39,12 @@ import java.util.regex.Pattern
 @Composable
 fun SignUpScreen(
     navController: NavHostController,
+    viewModel: SignUpViewModel,
     modifier: Modifier = Modifier,
     onSignUpSuccess: (email: String, password: String) -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val email by viewModel.email
+    val password by viewModel.password
 
     val context = LocalContext.current
 
@@ -71,7 +72,7 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        WavveCustomTextField(value = email, onValueChange = { email = it }, hint = stringResource(R.string.sign_up_email_hint))
+        WavveCustomTextField(value = email, onValueChange = viewModel::onEmailChange, hint = stringResource(R.string.sign_up_email_hint))
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -86,7 +87,7 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        WavveCustomTextField(value = password, onValueChange = { password = it }, hint = stringResource(
+        WavveCustomTextField(value = password, onValueChange = viewModel::onPasswordChange, hint = stringResource(
             R.string.sign_up_password_hint), isPasswordField = true)
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -132,12 +133,15 @@ fun SignUpScreen(
 
         Button(
             onClick = {
-                if (isValidEmail(email) && isValidPassword(password)) {
-                    onSignUpSuccess(email, password)
-                    context.toast(context.getString(R.string.sign_up_success))
-                } else {
-                    context.toast(context.getString(R.string.sign_up_failure))
-                }
+                viewModel.signUp(
+                    onSuccess = { email, password ->
+                        onSignUpSuccess(email, password)
+                        context.toast(context.getString(R.string.sign_up_success))
+                    },
+                    onFailure = {
+                        context.toast(context.getString(R.string.sign_up_failure))
+                    }
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()

@@ -17,7 +17,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.sopt.and.feature.nav.BottomNavigation
 import org.sopt.and.feature.signin.SignInScreen
+import org.sopt.and.feature.signin.SignInViewModel
 import org.sopt.and.feature.signup.SignUpScreen
+import org.sopt.and.feature.signup.SignUpViewModel
 import org.sopt.and.model.BottomNavItem
 import org.sopt.and.ui.theme.ANDANDROIDTheme
 
@@ -40,7 +42,7 @@ fun MainScreen(navController: NavHostController) {
     var registeredEmail by remember { mutableStateOf("") }
     var registeredPassword by remember { mutableStateOf("") }
 
-    NavHost(navController = navController, startDestination = "signIn") {
+    NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
         composable("signIn") {
             SignInScreen(
                 navController = navController,
@@ -59,22 +61,24 @@ fun MainScreen(navController: NavHostController) {
                         launchSingleTop = true
                     }
                 },
+                viewModel = SignInViewModel(),
                 modifier = Modifier
             )
         }
         composable("signUp") {
             SignUpScreen(
                 navController,
-                modifier = Modifier,
                 onSignUpSuccess = { email, password ->
                     registeredEmail = email
                     registeredPassword = password
                     navController.popBackStack()
-                }
+                },
+                viewModel = SignUpViewModel(),
+                modifier = Modifier
             )
         }
 
-        composable("home") {
+        composable(BottomNavItem.Home.route) {
             BottomNavigation(
                 registeredEmail,
                 modifier = Modifier
