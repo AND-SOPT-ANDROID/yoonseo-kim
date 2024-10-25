@@ -36,7 +36,8 @@ fun AutoSlidingRow(
         R.drawable.ic_poster2,
         R.drawable.ic_poster3,
         R.drawable.ic_poster4,
-        R.drawable.ic_poster5
+        R.drawable.ic_poster5,
+        R.drawable.ic_poster6
     )
     var currentIndex by remember { mutableStateOf(0) }
     val totalImages = images.size
