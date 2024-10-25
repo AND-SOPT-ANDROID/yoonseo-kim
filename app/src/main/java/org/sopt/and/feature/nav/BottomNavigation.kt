@@ -8,10 +8,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,7 +18,6 @@ import org.sopt.and.feature.home.HomeScreen
 import org.sopt.and.feature.mypage.MyPageScreen
 import org.sopt.and.feature.search.SearchScreen
 import org.sopt.and.model.BottomNavItem
-import org.sopt.and.ui.theme.ANDANDROIDTheme
 
 @Composable
 fun BottomNavigation(
@@ -38,14 +35,14 @@ fun BottomNavigation(
     Scaffold(
         bottomBar = {
             NavigationBar(
-                containerColor = Color.Black
+                containerColor = colorResource(R.color.background_gray)
             ) {
                 val currentRoute = navController.currentBackStackEntry?.destination?.route
                 items.forEach { item ->
                     NavigationBarItem(
                         icon = {
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_alarm_24),
+                                painter = painterResource(id = item.iconResId),
                                 contentDescription = "Bottom Navigation icon",
                             )
                         },
@@ -67,9 +64,15 @@ fun BottomNavigation(
             startDestination = BottomNavItem.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(BottomNavItem.Home.route) { HomeScreen() }
-            composable(BottomNavItem.Search.route) { SearchScreen() }
-            composable(BottomNavItem.MyPage.route) { MyPageScreen(registeredEmail = registeredEmail) }
+            composable(BottomNavItem.Home.route) {
+                HomeScreen()
+            }
+            composable(BottomNavItem.Search.route) {
+                SearchScreen()
+            }
+            composable(BottomNavItem.MyPage.route) {
+                MyPageScreen(registeredEmail = registeredEmail)
+            }
         }
     }
 }

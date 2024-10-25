@@ -1,11 +1,9 @@
 package org.sopt.and.model
 
 import org.sopt.and.R
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.painterResource
 
-enum class BottomNavItem(val route: String, val icon: @Composable () -> Unit, val title: String) {
-    Home("home", { painterResource(id = R.drawable.ic_alarm_24) }, "Home"),
-    Search("search", { painterResource(id = R.drawable.ic_alarm_24) }, "Search"),
-    MyPage("mypage", { painterResource(id = R.drawable.ic_alarm_24) }, "My Page")
+enum class BottomNavItem(val route: String, val iconResId: Int, val title: String) {
+    Home("home", R.drawable.ic_home_24, "홈"),
+    Search("search", R.drawable.ic_search_24, "검색"),
+    MyPage("mypage", R.drawable.ic_my_24, "MY")
 }
