@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package org.sopt.and.component
 
 import androidx.compose.foundation.clickable

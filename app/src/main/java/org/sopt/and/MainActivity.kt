@@ -42,7 +42,7 @@ fun MainScreen(navController: NavHostController) {
     var registeredEmail by remember { mutableStateOf("") }
     var registeredPassword by remember { mutableStateOf("") }
 
-    NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
+    NavHost(navController = navController, startDestination = "signIn") {
         composable("signIn") {
             SignInScreen(
                 navController = navController,
