@@ -22,6 +22,9 @@ import org.sopt.and.feature.signup.SignUpScreen
 import org.sopt.and.feature.signup.SignUpViewModel
 import org.sopt.and.model.BottomNavItem
 import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.utils.KeyStorage.HOME
+import org.sopt.and.utils.KeyStorage.SIGN_IN
+import org.sopt.and.utils.KeyStorage.SIGN_UP
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,15 +45,15 @@ fun MainScreen(navController: NavHostController) {
     var registeredEmail by remember { mutableStateOf("") }
     var registeredPassword by remember { mutableStateOf("") }
 
-    NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
-        composable("signIn") {
+    NavHost(navController = navController, startDestination = SIGN_IN) {
+        composable(SIGN_IN) {
             SignInScreen(
                 navController = navController,
                 registeredEmail = registeredEmail,
                 registeredPassword = registeredPassword,
                 snackbarHostState = snackbarHostState,
                 onSignUpClick = {
-                    navController.navigate("signUp")
+                    navController.navigate(SIGN_UP)
                 },
                 onSignInSuccess = { email ->
                     registeredEmail = email
@@ -65,7 +68,7 @@ fun MainScreen(navController: NavHostController) {
                 modifier = Modifier
             )
         }
-        composable("signUp") {
+        composable(SIGN_UP) {
             SignUpScreen(
                 navController,
                 onSignUpSuccess = { email, password ->
@@ -78,7 +81,7 @@ fun MainScreen(navController: NavHostController) {
             )
         }
 
-        composable(BottomNavItem.Home.route) {
+        composable(HOME) {
             BottomNavigation(
                 registeredEmail,
                 modifier = Modifier
