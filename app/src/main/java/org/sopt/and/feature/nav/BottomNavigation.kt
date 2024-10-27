@@ -47,7 +47,7 @@ fun BottomNavigation(
                                 contentDescription = "Bottom Navigation icon",
                             )
                         },
-                        label = { Text(item.title) },
+                        label = { Text(text = item.getTitle()) },
                         selected = currentRoute == item.route,
                         onClick = {
                             navController.navigate(item.route) {

@@ -5,12 +5,13 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.sopt.and.R
@@ -19,8 +20,15 @@ import org.sopt.and.R
 fun TabMenu(
     modifier: Modifier = Modifier
 ) {
-    var selectedTabIndex by remember { mutableStateOf(0) }
-    val tabItems = listOf("뉴클래식", "드라마", "예능", "영화", "애니", "해외시리즈")
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val tabItems = listOf(
+        stringResource(R.string.tab_menu_new_classic_title),
+        stringResource(R.string.tab_menu_drama_title),
+        stringResource(R.string.tab_menu_entertain_title),
+        stringResource(R.string.tab_menu_movie_title),
+        stringResource(R.string.tab_menu_animation_title),
+        stringResource(R.string.tab_menu_global_series_title)
+    )
 
     ScrollableTabRow(
         selectedTabIndex = selectedTabIndex,

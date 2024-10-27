@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +38,7 @@ fun RecommendationRow(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "믿고 보는 웨이브 에디터 추천작",
+            text = stringResource(R.string.recommendation_row_title),
             fontSize = 20.sp,
             fontWeight = Bold,
             color = Color.White,

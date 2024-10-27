@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle.Companion.Italic
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,7 @@ fun TodayTop20Row(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "오늘의 TOP 20",
+            text = stringResource(R.string.today_top_20_row_title),
             fontSize = 20.sp,
             fontWeight = Bold,
             color = Color.White,
@@ -72,7 +73,7 @@ fun TodayTop20Row(
                 )
 
                 Text(
-                    text = "${index + 1}",
+                    text = stringResource(R.string.today_top_20_row_item_index, index + 1),
                     fontSize = 60.sp,
                     fontWeight = Bold,
                     fontStyle = Italic,

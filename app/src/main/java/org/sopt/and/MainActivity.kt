@@ -80,7 +80,6 @@ fun MainScreen(navController: NavHostController) {
                 modifier = Modifier
             )
         }
-
         composable(HOME) {
             BottomNavigation(
                 registeredEmail,

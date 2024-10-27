@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.sopt.and.R
@@ -24,7 +25,7 @@ fun SearchScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Search Screen",
+            text = stringResource(R.string.search_screen_title),
             fontSize = 20.sp,
             color = colorResource(R.color.text_default_gray),
             modifier = Modifier.padding(horizontal = 5.dp)
