@@ -27,13 +27,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.sopt.and.R
 import org.sopt.and.component.SignUpTopBar
+import org.sopt.and.component.SocialLoginItem
 import org.sopt.and.component.WavveCustomTextField
-import org.sopt.and.utils.KeyStorage.EMAIL_PATTERN
-import org.sopt.and.utils.KeyStorage.PASSWORD_MAX_LENGTH
-import org.sopt.and.utils.KeyStorage.PASSWORD_MIN_LENGTH
-import org.sopt.and.utils.KeyStorage.PASSWORD_PATTERN
 import org.sopt.and.utils.toast
-import java.util.regex.Pattern
 
 @Composable
 fun SignUpScreen(
@@ -110,20 +106,9 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        Text(
-            text = stringResource(R.string.sign_up_social_service),
-            fontSize = 14.sp,
-            color = colorResource(id = R.color.text_default_gray),
-            modifier = Modifier
-                .padding(horizontal = 15.dp),
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Image(
-            painter = painterResource(id = R.drawable.ic_logo_group),
-            contentDescription = stringResource(R.string.logo_images_description),
-            modifier = Modifier.fillMaxWidth()
+        SocialLoginItem(
+            textResId = R.string.sign_up_social_service,
+            imageResId = R.drawable.ic_logo_group
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -161,31 +146,4 @@ fun SignUpScreen(
             Text(stringResource(R.string.sign_up_button))
         }
     }
-}
-
-fun isValidEmail(email: String): Boolean {
-    val emailPattern = EMAIL_PATTERN
-    return Pattern.matches(emailPattern, email)
-}
-
-fun isValidPassword(password: String): Boolean {
-    var hasLowercase = false
-    var hasUppercase = false
-    var hasDigit = false
-    var hasSpecialChar = false
-
-    for (char in password) {
-        when {
-            char.isLowerCase() -> hasLowercase = true
-            char.isUpperCase() -> hasUppercase = true
-            char.isDigit() -> hasDigit = true
-            PASSWORD_PATTERN.contains(char) -> hasSpecialChar = true
-        }
-
-        if (listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3) {
-            break
-        }
-    }
-
-    return password.length in PASSWORD_MIN_LENGTH..PASSWORD_MAX_LENGTH && listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3
 }

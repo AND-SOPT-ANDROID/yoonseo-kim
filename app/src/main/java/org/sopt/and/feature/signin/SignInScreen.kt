@@ -35,6 +35,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.component.SignInTopBar
+import org.sopt.and.component.SocialLoginItem
 import org.sopt.and.component.WavveCustomTextField
 import org.sopt.and.model.BottomNavItem
 
@@ -171,19 +172,9 @@ fun SignInScreen(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            Text(
-                text = stringResource(R.string.sign_in_social_service),
-                fontSize = 14.sp,
-                color = colorResource(R.color.text_default_gray),
-                modifier = Modifier.padding(horizontal = 15.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_logo_group),
-                contentDescription = stringResource(R.string.logo_images_description),
-                modifier = Modifier.fillMaxWidth()
+            SocialLoginItem(
+                textResId = R.string.sign_in_social_service,
+                imageResId = R.drawable.ic_logo_group
             )
 
             Spacer(modifier = Modifier.height(20.dp))
