@@ -15,20 +15,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.sopt.and.R
+import org.sopt.and.model.TabMenuItem
 
 @Composable
 fun TabMenu(
     modifier: Modifier = Modifier
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val tabItems = listOf(
-        stringResource(R.string.tab_menu_new_classic_title),
-        stringResource(R.string.tab_menu_drama_title),
-        stringResource(R.string.tab_menu_entertain_title),
-        stringResource(R.string.tab_menu_movie_title),
-        stringResource(R.string.tab_menu_animation_title),
-        stringResource(R.string.tab_menu_global_series_title)
-    )
+    val tabItems = TabMenuItem.values()
 
     ScrollableTabRow(
         selectedTabIndex = selectedTabIndex,
@@ -38,13 +32,13 @@ fun TabMenu(
         indicator = {},
         divider = {}
     ) {
-        tabItems.forEachIndexed { index, title ->
+        tabItems.forEachIndexed { index, tab ->
             Tab(
                 selected = selectedTabIndex == index,
                 onClick = { selectedTabIndex = index },
                 text = {
                     Text(
-                        text = title,
+                        text = stringResource(tab.titleResId),
                         fontSize = 18.sp,
                         color = if (selectedTabIndex == index) Color.White else Color.Gray
                     )
