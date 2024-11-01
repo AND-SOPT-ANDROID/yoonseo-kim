@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import org.sopt.and.R
 
 @Composable
-fun MyPageBox(
+fun MyPageHistoryItem(
     title: String,
     description: String,
     imageResId: Int,

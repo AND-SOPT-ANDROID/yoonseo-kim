@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
-import org.sopt.and.component.MyPageBox
+import org.sopt.and.component.MyPageHistoryItem
 
 @Composable
 fun MyPageScreen(
@@ -151,7 +151,7 @@ fun MyPageScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            MyPageBox(
+            MyPageHistoryItem(
                 title = stringResource(R.string.my_page_whole_history),
                 description = stringResource(R.string.my_page_no_history),
                 imageResId = R.drawable.ic_exclamation
@@ -159,7 +159,7 @@ fun MyPageScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            MyPageBox(
+            MyPageHistoryItem(
                 title = stringResource(R.string.my_page_interest_program),
                 description = stringResource(R.string.my_page_no_interest_program),
                 imageResId = R.drawable.ic_exclamation
