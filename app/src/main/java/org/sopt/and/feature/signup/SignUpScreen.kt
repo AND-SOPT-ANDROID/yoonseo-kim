@@ -122,7 +122,7 @@ fun SignUpScreen(
 
         Image(
             painter = painterResource(id = R.drawable.ic_logo_group),
-            contentDescription = "logo images",
+            contentDescription = stringResource(R.string.logo_images_description),
             modifier = Modifier.fillMaxWidth()
         )
 

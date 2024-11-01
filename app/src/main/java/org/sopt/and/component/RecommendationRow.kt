@@ -47,7 +47,7 @@ fun RecommendationRow(
 
         Image(
             painter = painterResource(id = R.drawable.ic_arrow_right_24),
-            contentDescription = "More icon",
+            contentDescription = stringResource(R.string.home_more_icon_description),
         )
     }
 
@@ -59,7 +59,7 @@ fun RecommendationRow(
         items(images) { imageResId ->
             Image(
                 painter = painterResource(id = imageResId),
-                contentDescription = "Poster Image",
+                contentDescription = stringResource(R.string.home_poster_image_description),
                 modifier = Modifier
                     .width(180.dp)
                     .height(300.dp)

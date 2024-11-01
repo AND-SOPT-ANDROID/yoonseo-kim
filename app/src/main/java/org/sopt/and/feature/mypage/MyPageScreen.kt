@@ -36,7 +36,7 @@ fun MyPageScreen(
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = viewModel()
 ) {
-    LaunchedEffect(registeredEmail) {
+    LaunchedEffect(Unit) {
         viewModel.initUserName(registeredEmail)
     }
 
@@ -59,7 +59,7 @@ fun MyPageScreen(
 
             Image(
                 painter = painterResource(id = R.drawable.ic_profile),
-                contentDescription = "Profile Image",
+                contentDescription = stringResource(R.string.my_page_profile_image_description),
                 modifier = Modifier
                     .clip(CircleShape)
                     .padding(start = 20.dp)
@@ -76,7 +76,7 @@ fun MyPageScreen(
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_alarm_24),
-                contentDescription = "Notifications",
+                contentDescription = stringResource(R.string.my_page_notifications_button_description),
                 tint = Color.White,
                 modifier = Modifier
                     .padding(end = 10.dp)
@@ -84,7 +84,7 @@ fun MyPageScreen(
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_setting_24),
-                contentDescription = "Settings",
+                contentDescription = stringResource(R.string.my_page_settings_button_description),
                 tint = Color.White,
                 modifier = Modifier
                     .padding(end = 20.dp)

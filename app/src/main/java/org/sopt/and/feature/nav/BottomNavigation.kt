@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,6 +20,9 @@ import org.sopt.and.feature.mypage.MyPageScreen
 import org.sopt.and.feature.mypage.MyPageViewModel
 import org.sopt.and.feature.search.SearchScreen
 import org.sopt.and.model.BottomNavItem
+import org.sopt.and.utils.KeyStorage.HOME
+import org.sopt.and.utils.KeyStorage.MY_PAGE
+import org.sopt.and.utils.KeyStorage.SEARCH
 
 @Composable
 fun BottomNavigation(
@@ -44,7 +48,7 @@ fun BottomNavigation(
                         icon = {
                             Icon(
                                 painter = painterResource(id = item.iconResId),
-                                contentDescription = "Bottom Navigation icon",
+                                contentDescription = stringResource(R.string.bottom_navigation_description),
                             )
                         },
                         label = { Text(text = item.getTitle()) },
@@ -62,16 +66,16 @@ fun BottomNavigation(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = BottomNavItem.Home.route,
+            startDestination = HOME,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(BottomNavItem.Home.route) {
+            composable(HOME) {
                 HomeScreen()
             }
-            composable(BottomNavItem.Search.route) {
+            composable(SEARCH) {
                 SearchScreen()
             }
-            composable(BottomNavItem.MyPage.route) {
+            composable(MY_PAGE) {
                 MyPageScreen(registeredEmail = registeredEmail, viewModel = MyPageViewModel())
             }
         }
