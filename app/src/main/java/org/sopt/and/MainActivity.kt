@@ -17,9 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.sopt.and.feature.nav.BottomNavigation
 import org.sopt.and.feature.signin.SignInScreen
-import org.sopt.and.feature.signin.SignInViewModel
 import org.sopt.and.feature.signup.SignUpScreen
-import org.sopt.and.feature.signup.SignUpViewModel
 import org.sopt.and.model.BottomNavItem
 import org.sopt.and.ui.theme.ANDANDROIDTheme
 import org.sopt.and.utils.KeyStorage.HOME
@@ -64,7 +62,6 @@ fun MainScreen(navController: NavHostController) {
                         launchSingleTop = true
                     }
                 },
-                viewModel = SignInViewModel(),
                 modifier = Modifier
             )
         }
@@ -76,7 +73,6 @@ fun MainScreen(navController: NavHostController) {
                     registeredPassword = password
                     navController.popBackStack()
                 },
-                viewModel = SignUpViewModel(),
                 modifier = Modifier
             )
         }

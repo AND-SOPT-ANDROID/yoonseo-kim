@@ -25,18 +25,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.sopt.and.R
-import org.sopt.and.feature.home.HomeViewModel
 
 @Composable
 fun AutoSlidingRow(
-    modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = viewModel()
+    images: List<Int>,
+    modifier: Modifier = Modifier
 ) {
-    val images = homeViewModel.autoSlidingImages
     val pagerState = rememberPagerState(
         pageCount = { images.size }
     )
