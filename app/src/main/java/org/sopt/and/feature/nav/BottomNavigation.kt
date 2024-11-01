@@ -11,18 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.sopt.and.R
-import org.sopt.and.feature.home.HomeScreen
-import org.sopt.and.feature.mypage.MyPageScreen
-import org.sopt.and.feature.mypage.MyPageViewModel
-import org.sopt.and.feature.search.SearchScreen
 import org.sopt.and.model.BottomNavItem
-import org.sopt.and.utils.KeyStorage.HOME
-import org.sopt.and.utils.KeyStorage.MY_PAGE
-import org.sopt.and.utils.KeyStorage.SEARCH
 
 @Composable
 fun BottomNavigation(
@@ -64,20 +55,10 @@ fun BottomNavigation(
             }
         }
     ) { innerPadding ->
-        NavHost(
+        NavGraph(
             navController = navController,
-            startDestination = HOME,
+            registeredEmail = registeredEmail,
             modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(HOME) {
-                HomeScreen()
-            }
-            composable(SEARCH) {
-                SearchScreen()
-            }
-            composable(MY_PAGE) {
-                MyPageScreen(registeredEmail = registeredEmail, viewModel = MyPageViewModel())
-            }
-        }
+        )
     }
 }
