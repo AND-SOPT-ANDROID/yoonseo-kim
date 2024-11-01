@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
 import org.sopt.and.component.MyPageHistoryItem
+import org.sopt.and.component.MyPagePurchaseItem
 
 @Composable
 fun MyPageScreen(
@@ -93,24 +94,10 @@ fun MyPageScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        Text(
-            text = stringResource(R.string.my_page_first_month_description),
-            fontSize = 16.sp,
-            color = colorResource(R.color.my_page_description_title),
-            lineHeight = 30.sp,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .fillMaxWidth()
-        )
-
-        Text(
-            text = stringResource(R.string.my_page_purchase),
-            fontSize = 16.sp,
-            color = Color.White,
-            lineHeight = 30.sp,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .fillMaxWidth()
+        MyPagePurchaseItem(
+            titleResId = R.string.my_page_first_month_description,
+            titleColor = colorResource(R.color.my_page_description_title),
+            descriptionResId = R.string.my_page_purchase
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -122,24 +109,10 @@ fun MyPageScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        Text(
-            text = stringResource(R.string.my_page_no_license),
-            fontSize = 16.sp,
-            color = colorResource(R.color.my_page_description_title),
-            lineHeight = 30.sp,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .fillMaxWidth()
-        )
-
-        Text(
-            text = stringResource(R.string.my_page_purchase),
-            fontSize = 16.sp,
-            color = Color.White,
-            lineHeight = 30.sp,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .fillMaxWidth()
+        MyPagePurchaseItem(
+            titleResId = R.string.my_page_no_license,
+            titleColor = colorResource(R.color.my_page_description_title),
+            descriptionResId = R.string.my_page_purchase
         )
 
         Spacer(modifier = Modifier.height(20.dp))
