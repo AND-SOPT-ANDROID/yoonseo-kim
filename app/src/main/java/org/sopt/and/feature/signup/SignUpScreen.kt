@@ -1,11 +1,5 @@
-package org.sopt.and.signup
+package org.sopt.and.feature.signup
 
-import android.app.Activity
-import android.content.Intent
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -16,13 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,58 +20,30 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import org.sopt.and.R
 import org.sopt.and.component.SignUpTopBar
 import org.sopt.and.component.WavveCustomTextField
-import org.sopt.and.ui.theme.ANDANDROIDTheme
-import org.sopt.and.utils.KeyStorage.EMAIL
 import org.sopt.and.utils.KeyStorage.EMAIL_PATTERN
-import org.sopt.and.utils.KeyStorage.PASSWORD
 import org.sopt.and.utils.KeyStorage.PASSWORD_MAX_LENGTH
 import org.sopt.and.utils.KeyStorage.PASSWORD_MIN_LENGTH
 import org.sopt.and.utils.KeyStorage.PASSWORD_PATTERN
 import org.sopt.and.utils.toast
 import java.util.regex.Pattern
 
-class SignUpActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            ANDANDROIDTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    SignUp(
-                        modifier = Modifier.padding(innerPadding),
-                        onSignUpSuccess = { email, password ->
-                            handleSignUp(email, password)
-                        }
-                    )
-                }
-            }
-        }
-    }
-
-    private fun handleSignUp(email: String, password: String) {
-        val intent = Intent().apply {
-            putExtra(EMAIL, email)
-            putExtra(PASSWORD, password)
-        }
-        setResult(Activity.RESULT_OK, intent)
-        finish()
-    }
-}
-
 @Composable
-fun SignUp(
+fun SignUpScreen(
+    navController: NavHostController,
     modifier: Modifier = Modifier,
-    onSignUpSuccess: (email: String, password: String) -> Unit
+    onSignUpSuccess: (email: String, password: String) -> Unit,
+    viewModel: SignUpViewModel = viewModel(),
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
 
@@ -109,7 +71,11 @@ fun SignUp(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        WavveCustomTextField(value = email, onValueChange = { email = it }, hint = stringResource(R.string.sign_up_email_hint))
+        WavveCustomTextField(
+            value = email,
+            onValueChange = { viewModel.updateEmail(it) },
+            hint = stringResource(R.string.sign_up_email_hint)
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -124,7 +90,12 @@ fun SignUp(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        WavveCustomTextField(value = password, onValueChange = { password = it }, hint = stringResource(R.string.sign_up_password_hint), isPasswordField = true)
+        WavveCustomTextField(
+            value = password,
+            onValueChange = { viewModel.updatePassword(it) },
+            hint = stringResource(R.string.sign_up_password_hint),
+            isPasswordField = true
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -151,7 +122,7 @@ fun SignUp(
 
         Image(
             painter = painterResource(id = R.drawable.ic_logo_group),
-            contentDescription = "logo images",
+            contentDescription = stringResource(R.string.logo_images_description),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -169,12 +140,15 @@ fun SignUp(
 
         Button(
             onClick = {
-                if (isValidEmail(email) && isValidPassword(password)) {
-                    onSignUpSuccess(email, password)
-                    context.toast(context.getString(R.string.sign_up_success))
-                } else {
-                    context.toast(context.getString(R.string.sign_up_failure))
-                }
+                viewModel.signUp(
+                    onSuccess = { email, password ->
+                        onSignUpSuccess(email, password)
+                        context.toast(context.getString(R.string.sign_up_success))
+                    },
+                    onFailure = {
+                        context.toast(context.getString(R.string.sign_up_failure))
+                    }
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -214,16 +188,4 @@ fun isValidPassword(password: String): Boolean {
     }
 
     return password.length in PASSWORD_MIN_LENGTH..PASSWORD_MAX_LENGTH && listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3
-}
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun SignUpPreview() {
-    ANDANDROIDTheme {
-        SignUp(
-            onSignUpSuccess = { _, _ -> }
-        )
-    }
 }

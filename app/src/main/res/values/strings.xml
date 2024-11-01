@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AND-ANDROID</string>
 
-    <!-- Sign Up -->
+    <!-- Sign Up Screen -->
     <string name="sign_up_top_bar">회원가입</string>
     <string name="sign_up_title">이메일과 비밀번호만으로\nWavve를 즐길 수 있어요!</string>
     <string name="sign_up_email_hint">wavve@example.com</string>
@@ -13,8 +13,9 @@
     <string name="sign_up_button">Wavve 회원가입</string>
     <string name="sign_up_success">회원가입 성공</string>
     <string name="sign_up_failure">회원가입 실패</string>
+    <string name="sign_up_close_button_description">close button</string>
 
-    <!-- Sign In -->
+    <!-- Sign In Screen -->
     <string name="sign_in_top_bar">Wavve</string>
     <string name="sign_in_email_hint">이메일 주소 또는 아이디</string>
     <string name="sign_in_password_hint">비밀번호</string>
@@ -27,8 +28,13 @@
     <string name="sign_in_to_sign_up_button">회원가입</string>
     <string name="sign_in_social_service">또는 다른 서비스 계정으로 로그인</string>
     <string name="sign_in_sns_description">- SNS계정으로 간편하게 가입하여 서비스를 이용하실 수 있습니다.\n 기존 POOQ 계정 또는 Wavve 계정과는 연동되지 않으니 이용에 참고하세요.</string>
+    <string name="sign_in_title_description">Wavve logo title</string>
+    <string name="sign_in_left_arrow_button_description">left arrow button</string>
 
-    <!-- My Page -->
+    <!-- Sign In, Sign Up 공통 -->
+    <string name="logo_images_description">logo images</string>
+
+    <!-- My Page Screen -->
     <string name="my_page_profile_name">%1$s님</string>
     <string name="my_page_first_month_description">첫 결제 시 첫 달 100원!</string>
     <string name="my_page_purchase">구매하기 ></string>
@@ -37,8 +43,38 @@
     <string name="my_page_no_history">시청내역이 없어요.</string>
     <string name="my_page_interest_program">관심 프로그램</string>
     <string name="my_page_no_interest_program">관심 프로그램이 없어요.</string>
+    <string name="my_page_profile_image_description">Profile Image</string>
+    <string name="my_page_notifications_button_description">Notifications</string>
+    <string name="my_page_settings_button_description">Settings</string>
 
     <!-- TextField -->
     <string name="text_field_show">show</string>
     <string name="text_field_hide">hide</string>
+
+    <!-- Bottom Nav Item -->
+    <string name="home_bottom_nav_item">홈</string>
+    <string name="search_bottom_nav_item">검색</string>
+    <string name="my_page_bottom_nav_item">MY</string>
+    <string name="bottom_navigation_description">Bottom Navigation Icon</string>
+
+    <!-- Home Screen -->
+    <string name="tab_menu_new_classic_title">뉴클래식</string>
+    <string name="tab_menu_drama_title">드라마</string>
+    <string name="tab_menu_entertain_title">예능</string>
+    <string name="tab_menu_movie_title">영화</string>
+    <string name="tab_menu_animation_title">애니</string>
+    <string name="tab_menu_global_series_title">해외시리즈</string>
+    <string name="recommendation_row_title">믿고 보는 웨이브 에디터 추천작</string>
+    <string name="today_top_20_row_title">오늘의 TOP 20</string>
+    <string name="today_top_20_row_item_index">%1$d</string>
+    <string name="auto_sliding_posters_row_description">Auto sliding posters row</string>
+    <string name="home_wavve_logo_description">Home Wavve Logo</string>
+    <string name="home_cast_button_description">Cast</string>
+    <string name="home_live_button_description">Live</string>
+    <string name="home_more_icon_description">More Icon</string>
+    <string name="home_poster_image_description">Poster Image</string>
+
+    <!-- Search Screen -->
+    <string name="search_screen_title">Search Screen</string>
+
 </resources>

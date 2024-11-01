@@ -1,9 +1,5 @@
-package org.sopt.and.mypage
+package org.sopt.and.feature.mypage
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,9 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,39 +24,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
 import org.sopt.and.component.MyPageBox
-import org.sopt.and.ui.theme.ANDANDROIDTheme
-import org.sopt.and.utils.KeyStorage.EMAIL
-
-class MyActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-
-        val registeredEmail = intent.getStringExtra(EMAIL).orEmpty()
-
-        setContent {
-            ANDANDROIDTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MyPage(
-                        name = registeredEmail,
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
-    }
-}
 
 @Composable
-fun MyPage(
-    name: String,
-    modifier: Modifier = Modifier
+fun MyPageScreen(
+    registeredEmail: String,
+    modifier: Modifier = Modifier,
+    viewModel: MyPageViewModel = viewModel()
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.initUserName(registeredEmail)
+    }
+
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -80,7 +59,7 @@ fun MyPage(
 
             Image(
                 painter = painterResource(id = R.drawable.ic_profile),
-                contentDescription = "Profile Image",
+                contentDescription = stringResource(R.string.my_page_profile_image_description),
                 modifier = Modifier
                     .clip(CircleShape)
                     .padding(start = 20.dp)
@@ -89,7 +68,7 @@ fun MyPage(
             Spacer(modifier = Modifier.width(16.dp))
 
             Text(
-                text = stringResource(R.string.my_page_profile_name, name),
+                text = stringResource(R.string.my_page_profile_name, registeredEmail),
                 fontSize = 18.sp,
                 color = Color.White,
                 modifier = Modifier.weight(1f)
@@ -97,7 +76,7 @@ fun MyPage(
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_alarm_24),
-                contentDescription = "Notifications",
+                contentDescription = stringResource(R.string.my_page_notifications_button_description),
                 tint = Color.White,
                 modifier = Modifier
                     .padding(end = 10.dp)
@@ -105,7 +84,7 @@ fun MyPage(
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_setting_24),
-                contentDescription = "Settings",
+                contentDescription = stringResource(R.string.my_page_settings_button_description),
                 tint = Color.White,
                 modifier = Modifier
                     .padding(end = 20.dp)
@@ -188,13 +167,5 @@ fun MyPage(
 
             Spacer(modifier = Modifier.weight(1f))
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MyPreview() {
-    ANDANDROIDTheme {
-        MyPage(stringResource(R.string.my_page_profile_name))
     }
 }
