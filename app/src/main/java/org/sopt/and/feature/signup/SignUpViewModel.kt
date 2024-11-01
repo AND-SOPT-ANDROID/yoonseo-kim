@@ -1,7 +1,8 @@
 package org.sopt.and.feature.signup
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.sopt.and.utils.KeyStorage.EMAIL_PATTERN
 import org.sopt.and.utils.KeyStorage.PASSWORD_MAX_LENGTH
 import org.sopt.and.utils.KeyStorage.PASSWORD_MIN_LENGTH
@@ -9,15 +10,18 @@ import org.sopt.and.utils.KeyStorage.PASSWORD_PATTERN
 import java.util.regex.Pattern
 
 class SignUpViewModel : ViewModel() {
-    var email = mutableStateOf("")
-    var password = mutableStateOf("")
+    private val _email = MutableStateFlow("")
+    val email: StateFlow<String> = _email
+
+    private val _password = MutableStateFlow("")
+    val password: StateFlow<String> = _password
 
     fun updateEmail(newEmail: String) {
-        email.value = newEmail
+        _email.value = newEmail
     }
 
     fun updatePassword(newPassword: String) {
-        password.value = newPassword
+        _password.value = newPassword
     }
 
     private fun isValidEmail(): Boolean {

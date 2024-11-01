@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.sopt.and.R
@@ -41,8 +42,8 @@ fun SignUpScreen(
     onSignUpSuccess: (email: String, password: String) -> Unit,
     viewModel: SignUpViewModel = viewModel(),
 ) {
-    val email by viewModel.email
-    val password by viewModel.password
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
 

@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
@@ -48,8 +49,8 @@ fun SignInScreen(
     viewModel: SignInViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    val email by viewModel.email
-    val password by viewModel.password
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -103,7 +104,9 @@ fun SignInScreen(
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                        },
+                            scope.launch {
+                                snackbarHostState.showSnackbar(message = context.getString(R.string.sign_in_success))
+                            }                        },
                         onFailure = {
                             scope.launch {
                                 snackbarHostState.showSnackbar(message = context.getString(R.string.sign_in_failure))

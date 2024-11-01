@@ -1,22 +1,26 @@
 package org.sopt.and.feature.signin
 
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SignInViewModel : ViewModel() {
 
-    var email = mutableStateOf("")
-    var password = mutableStateOf("")
+    private val _email = MutableStateFlow("")
+    val email: StateFlow<String> = _email
+
+    private val _password = MutableStateFlow("")
+    val password: StateFlow<String> = _password
 
     fun onEmailChanged(newEmail: String) {
-        email.value = newEmail
+        _email.value = newEmail
     }
 
     fun onPasswordChanged(newPassword: String) {
-        password.value = newPassword
+        _password.value = newPassword
     }
 
     fun signIn(
@@ -28,12 +32,10 @@ class SignInViewModel : ViewModel() {
     ) {
         if (!registeredEmail.isNullOrBlank() && !registeredPassword.isNullOrBlank() && email.value == registeredEmail && password.value == registeredPassword) {
             viewModelScope.launch {
-                snackbarHostState.showSnackbar("로그인 성공")
                 onSuccess(email.value)
             }
         } else {
             viewModelScope.launch {
-                snackbarHostState.showSnackbar("로그인 실패")
                 onFailure()
             }
         }
