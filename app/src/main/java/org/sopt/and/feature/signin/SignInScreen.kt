@@ -1,7 +1,6 @@
 package org.sopt.and.feature.signin
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,13 +29,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.component.SignInTopBar
 import org.sopt.and.component.SocialLoginItem
 import org.sopt.and.component.WavveCustomTextField
-import org.sopt.and.model.BottomNavItem
+import org.sopt.and.utils.noRippleClickable
 
 @Composable
 fun SignInScreen(
@@ -156,7 +154,7 @@ fun SignInScreen(
                     color = colorResource(R.color.text_default_gray),
                     modifier = Modifier
                         .padding(horizontal = 5.dp)
-                        .clickable { onSignUpClick() }
+                        .noRippleClickable { onSignUpClick() }
                 )
             }
 
