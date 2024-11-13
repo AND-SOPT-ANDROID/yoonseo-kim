@@ -1,5 +1,7 @@
 package org.sopt.and.component
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +26,7 @@ import org.sopt.and.R
 fun MyPageHistoryItem(
     title: String,
     description: String,
-    imageResId: Int,
+    @DrawableRes imageResId: Int,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -67,9 +69,9 @@ fun MyPageHistoryItem(
 
 @Composable
 fun MyPagePurchaseItem(
-    titleResId: Int,
+    @StringRes titleResId: Int,
     titleColor: Color,
-    descriptionResId: Int,
+    @StringRes descriptionResId: Int,
     descriptionColor: Color = Color.White,
     modifier: Modifier = Modifier
 ) {

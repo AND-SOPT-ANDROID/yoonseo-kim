@@ -1,5 +1,6 @@
 package org.sopt.and.component
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -19,7 +20,7 @@ import org.sopt.and.R
 
 @Composable
 fun HomeRowItemTitle(
-    titleResId: Int,
+    @StringRes titleResId: Int,
     modifier: Modifier = Modifier
 ) {
     Row(

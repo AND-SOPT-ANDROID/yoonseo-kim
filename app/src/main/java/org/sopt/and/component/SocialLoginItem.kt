@@ -1,5 +1,7 @@
 package org.sopt.and.component
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,8 +19,8 @@ import org.sopt.and.R
 
 @Composable
 fun SocialLoginItem(
-    textResId: Int,
-    imageResId: Int,
+    @StringRes textResId: Int,
+    @DrawableRes imageResId: Int,
     modifier: Modifier = Modifier
 ) {
     Text(
