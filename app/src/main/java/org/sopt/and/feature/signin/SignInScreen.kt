@@ -47,7 +47,7 @@ fun SignInScreen(
     viewModel: SignInViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    val email by viewModel.email.collectAsStateWithLifecycle()
+    val username by viewModel.username.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -71,9 +71,9 @@ fun SignInScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             WavveCustomTextField(
-                value = email,
-                onValueChange = viewModel::onEmailChanged,
-                hint = stringResource(R.string.sign_in_email_hint)
+                value = username,
+                onValueChange = viewModel::onUsernameChanged,
+                hint = stringResource(R.string.sign_in_username_hint)
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -90,7 +90,7 @@ fun SignInScreen(
             Button(
                 onClick = {
                     viewModel.signIn(
-                        registeredEmail = registeredEmail,
+                        registeredUsername = registeredEmail,
                         registeredPassword = registeredPassword,
                         snackbarHostState = snackbarHostState,
                         onSuccess = { email ->

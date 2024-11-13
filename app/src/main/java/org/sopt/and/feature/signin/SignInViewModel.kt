@@ -9,14 +9,14 @@ import kotlinx.coroutines.launch
 
 class SignInViewModel : ViewModel() {
 
-    private val _email = MutableStateFlow("")
-    val email: StateFlow<String> = _email
+    private val _username = MutableStateFlow("")
+    val username: StateFlow<String> = _username
 
     private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password
 
-    fun onEmailChanged(newEmail: String) {
-        _email.value = newEmail
+    fun onUsernameChanged(newUsername: String) {
+        _username.value = newUsername
     }
 
     fun onPasswordChanged(newPassword: String) {
@@ -24,15 +24,15 @@ class SignInViewModel : ViewModel() {
     }
 
     fun signIn(
-        registeredEmail: String?,
+        registeredUsername: String?,
         registeredPassword: String?,
         snackbarHostState: SnackbarHostState,
         onSuccess: (String) -> Unit,
         onFailure: () -> Unit
     ) {
-        if (!registeredEmail.isNullOrBlank() && !registeredPassword.isNullOrBlank() && email.value == registeredEmail && password.value == registeredPassword) {
+        if (!registeredUsername.isNullOrBlank() && !registeredPassword.isNullOrBlank() && username.value == registeredUsername && password.value == registeredPassword) {
             viewModelScope.launch {
-                onSuccess(email.value)
+                onSuccess(username.value)
             }
         } else {
             viewModelScope.launch {
