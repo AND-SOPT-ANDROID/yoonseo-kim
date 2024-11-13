@@ -33,7 +33,7 @@ import org.sopt.and.utils.toast
 fun SignUpScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    onSignUpSuccess: (email: String, password: String) -> Unit,
+    onSignUpSuccess: () -> Unit,
     viewModel: SignUpViewModel = viewModel(),
 ) {
     val username by viewModel.username.collectAsStateWithLifecycle()
@@ -144,8 +144,8 @@ fun SignUpScreen(
         Button(
             onClick = {
                 viewModel.signUp(
-                    onSuccess = { email, password ->
-                        onSignUpSuccess(email, password)
+                    onSuccess = {
+                        onSignUpSuccess()
                         context.toast(context.getString(R.string.sign_up_success))
                     },
                     onFailure = {
