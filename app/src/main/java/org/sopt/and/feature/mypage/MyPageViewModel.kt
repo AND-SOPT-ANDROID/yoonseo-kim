@@ -1,14 +1,55 @@
 package org.sopt.and.feature.mypage
 
-import androidx.compose.runtime.mutableStateOf
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.json.Json
+import org.sopt.and.api.ServicePool.authService
+import org.sopt.and.api.dto.response.ResponseErrorDto
+import org.sopt.and.api.dto.response.ResponseHobbyDto
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class MyPageViewModel : ViewModel() {
-    private var registeredEmail = mutableStateOf("")
+class MyPageViewModel(context: Context) : ViewModel() {
 
-    fun initUserName(email: String) {
-        if (registeredEmail.value.isEmpty()) {
-            registeredEmail.value = email
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+
+    private val _hobby = MutableStateFlow("")
+    val hobby: StateFlow<String> get() = _hobby
+
+    fun initHobby(token: String) {
+        if (token.isNotEmpty()) {
+            getHobby("Bearer $token")
+        }
+    }
+
+    private fun getHobby(token: String) {
+        authService.getHobby(token).enqueue(object : Callback<ResponseHobbyDto> {
+            override fun onResponse(call: Call<ResponseHobbyDto>, response: Response<ResponseHobbyDto>) {
+                if (response.isSuccessful && response.body()?.result?.hobby != null) {
+                    _hobby.value = response.body()!!.result.hobby
+                } else {
+                    handleGetError(response)
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseHobbyDto>, t: Throwable) {
+
+            }
+        })
+    }
+
+    private fun handleGetError(response: Response<ResponseHobbyDto>) {
+        val errorBody = response.errorBody()?.string()
+        val errorDto = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it) }
+
+        val message = when (errorDto?.code) {
+            "00" -> "취미 정보를 불러올 수 없습니다."
+            else -> "알 수 없는 오류가 발생했습니다."
         }
     }
 }

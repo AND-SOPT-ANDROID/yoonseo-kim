@@ -1,5 +1,6 @@
 package org.sopt.and.feature.mypage
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,13 +35,18 @@ import org.sopt.and.component.MyPagePurchaseItem
 
 @Composable
 fun MyPageScreen(
-    registeredEmail: String,
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = viewModel()
 ) {
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+    val token = sharedPreferences.getString("token", "") ?: ""
+
     LaunchedEffect(Unit) {
-        viewModel.initUserName(registeredEmail)
+        viewModel.initHobby(token)
     }
+
+    val hobby = viewModel.hobby.value
 
     Column (
         modifier = Modifier
@@ -69,7 +76,7 @@ fun MyPageScreen(
             Spacer(modifier = Modifier.width(16.dp))
 
             Text(
-                text = stringResource(R.string.my_page_profile_name, registeredEmail),
+                text = stringResource(R.string.my_page_profile_name, hobby),
                 fontSize = 18.sp,
                 color = Color.White,
                 modifier = Modifier.weight(1f)
