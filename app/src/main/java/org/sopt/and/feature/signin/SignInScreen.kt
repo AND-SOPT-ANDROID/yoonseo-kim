@@ -1,8 +1,6 @@
 package org.sopt.and.feature.signin
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,8 +32,9 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.component.SignInTopBar
+import org.sopt.and.component.SocialLoginItem
 import org.sopt.and.component.WavveCustomTextField
-import org.sopt.and.model.BottomNavItem
+import org.sopt.and.utils.noRippleClickable
 
 @Composable
 fun SignInScreen(
@@ -97,16 +95,7 @@ fun SignInScreen(
                         snackbarHostState = snackbarHostState,
                         onSuccess = { email ->
                             onSignInSuccess(email)
-                            navController.navigate(BottomNavItem.Home.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            scope.launch {
-                                snackbarHostState.showSnackbar(message = context.getString(R.string.sign_in_success))
-                            }                        },
+                        },
                         onFailure = {
                             scope.launch {
                                 snackbarHostState.showSnackbar(message = context.getString(R.string.sign_in_failure))
@@ -165,25 +154,15 @@ fun SignInScreen(
                     color = colorResource(R.color.text_default_gray),
                     modifier = Modifier
                         .padding(horizontal = 5.dp)
-                        .clickable { onSignUpClick() }
+                        .noRippleClickable { onSignUpClick() }
                 )
             }
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            Text(
-                text = stringResource(R.string.sign_in_social_service),
-                fontSize = 14.sp,
-                color = colorResource(R.color.text_default_gray),
-                modifier = Modifier.padding(horizontal = 15.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_logo_group),
-                contentDescription = stringResource(R.string.logo_images_description),
-                modifier = Modifier.fillMaxWidth()
+            SocialLoginItem(
+                textResId = R.string.sign_in_social_service,
+                imageResId = R.drawable.ic_logo_group
             )
 
             Spacer(modifier = Modifier.height(20.dp))

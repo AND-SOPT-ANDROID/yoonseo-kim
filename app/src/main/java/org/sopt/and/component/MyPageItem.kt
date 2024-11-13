@@ -1,5 +1,7 @@
 package org.sopt.and.component
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,16 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.sopt.and.R
 
 @Composable
-fun MyPageBox(
+fun MyPageHistoryItem(
     title: String,
     description: String,
-    imageResId: Int,
+    @DrawableRes imageResId: Int,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -62,4 +65,33 @@ fun MyPageBox(
                 .padding(horizontal = 20.dp)
         )
     }
+}
+
+@Composable
+fun MyPagePurchaseItem(
+    @StringRes titleResId: Int,
+    titleColor: Color,
+    @StringRes descriptionResId: Int,
+    descriptionColor: Color = Color.White,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = stringResource(id = titleResId),
+        fontSize = 16.sp,
+        color = titleColor,
+        lineHeight = 30.sp,
+        modifier = modifier
+            .padding(horizontal = 20.dp)
+            .fillMaxWidth()
+    )
+
+    Text(
+        text = stringResource(id = descriptionResId),
+        fontSize = 16.sp,
+        color = descriptionColor,
+        lineHeight = 30.sp,
+        modifier = modifier
+            .padding(horizontal = 20.dp)
+            .fillMaxWidth()
+    )
 }

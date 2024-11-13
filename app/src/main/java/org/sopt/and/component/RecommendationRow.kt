@@ -26,26 +26,9 @@ fun RecommendationRow(
     images: List<Int>,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = stringResource(R.string.recommendation_row_title),
-            fontSize = 20.sp,
-            fontWeight = Bold,
-            color = Color.White,
-            lineHeight = 30.sp,
-        )
-
-        Image(
-            painter = painterResource(id = R.drawable.ic_arrow_right_24),
-            contentDescription = stringResource(R.string.home_more_icon_description),
-        )
-    }
+    HomeRowItemTitle(
+        titleResId = R.string.recommendation_row_title
+    )
 
     LazyRow(
         modifier = Modifier
