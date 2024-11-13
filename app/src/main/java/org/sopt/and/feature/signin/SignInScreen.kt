@@ -1,5 +1,6 @@
 package org.sopt.and.feature.signin
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,15 +37,14 @@ import org.sopt.and.component.SignInTopBar
 import org.sopt.and.component.SocialLoginItem
 import org.sopt.and.component.WavveCustomTextField
 import org.sopt.and.utils.noRippleClickable
+import org.sopt.and.utils.toast
 
 @Composable
 fun SignInScreen(
     navController: NavController,
-    registeredEmail: String?,
-    registeredPassword: String?,
     snackbarHostState: SnackbarHostState,
     onSignUpClick: () -> Unit,
-    onSignInSuccess: (String) -> Unit,
+    onSignInSuccess: () -> Unit,
     viewModel: SignInViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -51,6 +52,7 @@ fun SignInScreen(
     val password by viewModel.password.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val viewModel = remember { SignInViewModel(context) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -90,16 +92,13 @@ fun SignInScreen(
             Button(
                 onClick = {
                     viewModel.signIn(
-                        registeredUsername = registeredEmail,
-                        registeredPassword = registeredPassword,
-                        snackbarHostState = snackbarHostState,
-                        onSuccess = { email ->
-                            onSignInSuccess(email)
+                        context = context,
+                        onSuccess = { token ->
+                            onSignInSuccess()
+                            context.toast("로그인 성공")
                         },
                         onFailure = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(message = context.getString(R.string.sign_in_failure))
-                            }
+                            context.toast("로그인 실패")
                         }
                     )
                 },
