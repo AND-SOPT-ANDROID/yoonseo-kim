@@ -1,6 +1,5 @@
 package org.sopt.and.feature.signin
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,9 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.component.SignInTopBar
 import org.sopt.and.component.SocialLoginItem
@@ -45,14 +42,14 @@ fun SignInScreen(
     snackbarHostState: SnackbarHostState,
     onSignUpClick: () -> Unit,
     onSignInSuccess: () -> Unit,
-    viewModel: SignInViewModel = viewModel(),
+    // viewModel: SignInViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val viewModel = remember { SignInViewModel(context) }
     val username by viewModel.username.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-    val viewModel = remember { SignInViewModel(context) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

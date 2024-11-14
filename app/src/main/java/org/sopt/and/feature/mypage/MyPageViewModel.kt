@@ -2,6 +2,7 @@ package org.sopt.and.feature.mypage
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,16 +23,22 @@ class MyPageViewModel(context: Context) : ViewModel() {
     val hobby: StateFlow<String> get() = _hobby
 
     fun initHobby(token: String) {
+        Log.e("MyPageViewModel", "initHobby called with token: $token")
         if (token.isNotEmpty()) {
-            getHobby("Bearer $token")
+            getHobby(token)
         }
     }
 
     private fun getHobby(token: String) {
         authService.getHobby(token).enqueue(object : Callback<ResponseHobbyDto> {
             override fun onResponse(call: Call<ResponseHobbyDto>, response: Response<ResponseHobbyDto>) {
-                if (response.isSuccessful && response.body()?.result?.hobby != null) {
-                    _hobby.value = response.body()!!.result.hobby
+                if (response.isSuccessful) {
+                    val hobby = response.body()?.result?.hobby
+                    if (!hobby.isNullOrEmpty()) {
+                        _hobby.value = hobby
+                    } else {
+                        handleGetError(response)
+                    }
                 } else {
                     handleGetError(response)
                 }

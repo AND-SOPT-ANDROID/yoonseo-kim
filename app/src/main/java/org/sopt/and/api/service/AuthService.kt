@@ -24,7 +24,7 @@ interface AuthService {
 
     @GET("/user/my-hobby")
     fun getHobby(
-        @Header("Authorization")
+        @Header("token")
         token: String
     ): Call<ResponseHobbyDto>
 }

@@ -17,7 +17,6 @@ import org.sopt.and.model.BottomNavItem
 
 @Composable
 fun BottomNavigation(
-    registeredHobby: String,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
