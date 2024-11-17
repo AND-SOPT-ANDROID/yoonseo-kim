@@ -84,18 +84,18 @@ class SignUpViewModel : ViewModel() {
         return when (response.code()) {
             400 -> {
                 when (errorDto?.code) {
-                    "01" -> "Username, password, or hobby exceeds 8 characters."
+                    "01" -> "username, 비밀번호, hobby는 8자 이하여야 합니다."
                     else -> "Bad request error."
                 }
             }
-            404 -> "Invalid path. Please check the URL and method."
+            404 -> "method와 path 확인이 필요합니다."
             409 -> {
                 when (errorDto?.code) {
-                    "00" -> "닉네임 중복"
+                    "00" -> "username 중복입니다."
                     else -> ""
                 }
             }
-            else -> "Unknown error occurred."
+            else -> "로그인에 실패하였습니다."
         }
     }
 }
