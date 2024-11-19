@@ -1,16 +1,16 @@
 package org.sopt.and.feature.signup
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.sopt.and.api.ServicePool.authService
 import org.sopt.and.api.dto.request.RequestSignUpDto
 import org.sopt.and.api.dto.response.ResponseErrorDto
-import org.sopt.and.api.dto.response.ResponseSignUpDto
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import retrofit2.HttpException
+import java.io.IOException
 
 class SignUpViewModel : ViewModel() {
     private val _username = MutableStateFlow("")
@@ -48,7 +48,7 @@ class SignUpViewModel : ViewModel() {
 
     fun signUp(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         if (!isValidUser()) {
-            onFailure("Invalid Input")
+            onFailure("유효하지 않은 사용자 정보입니다.")
             return
         }
 
@@ -58,44 +58,34 @@ class SignUpViewModel : ViewModel() {
             hobby = hobby.value
         )
 
-        authService.signUp(request).enqueue(object : Callback<ResponseSignUpDto> {
-            override fun onResponse(
-                call: Call<ResponseSignUpDto>,
-                response: Response<ResponseSignUpDto>
-            ) {
-                if (response.isSuccessful && response.body()?.result != null) {
-                    onSuccess()
-                } else {
-                    val errorMessage = handleError(response)
-                    onFailure(errorMessage)
+        viewModelScope.launch {
+            runCatching {
+                authService.signUp(request)
+            }.onSuccess { response ->
+                onSuccess()
+            }.onFailure { throwable ->
+                val errorMessage = when (throwable) {
+                    is HttpException -> handleError(throwable)
+                    is IOException -> "네트워크 오류: ${throwable.message}"
+                    else -> "예기치 못한 오류가 발생했습니다."
                 }
+                onFailure(errorMessage)
             }
-
-            override fun onFailure(call: Call<ResponseSignUpDto>, t: Throwable) {
-                onFailure("Network error: ${t.message}")
-            }
-        })
+        }
     }
 
-    private fun handleError(response: Response<ResponseSignUpDto>): String {
-        val errorBody = response.errorBody()?.string()
-        val errorDto = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it) }
-
-        return when (response.code()) {
-            400 -> {
-                when (errorDto?.code) {
-                    "01" -> "username, 비밀번호, hobby는 8자 이하여야 합니다."
-                    else -> "Bad request error."
-                }
+    private fun handleError(exception: HttpException): String {
+        val errorBody = exception.response()?.errorBody()?.string()
+        val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
+        return when (exception.code()) {
+            400 -> when (errorCode) {
+                "00" -> "request body가 유효하지 않습니다."
+                "01" -> "username, password, hobby는 8자 이하여야 합니다."
+                else -> "잘못된 요청입니다."
             }
-            404 -> "method와 path 확인이 필요합니다."
-            409 -> {
-                when (errorDto?.code) {
-                    "00" -> "username 중복입니다."
-                    else -> ""
-                }
-            }
-            else -> "로그인에 실패하였습니다."
+            404 -> "유효하지 않은 경로 요청입니다."
+            409 -> "중복된 username입니다."
+            else -> "서버 오류 발생 (${exception.code()})"
         }
     }
 }

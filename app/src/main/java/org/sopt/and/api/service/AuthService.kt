@@ -12,19 +12,25 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthService {
-    @POST("/user")
-    fun signUp(
+    @POST("/$USER")
+    suspend fun signUp(
         @Body request: RequestSignUpDto
-    ): Call<ResponseSignUpDto>
+    ): ResponseSignUpDto
 
-    @POST("/login")
+    @POST("/$LOGIN")
     fun signIn(
         @Body request: RequestSignInDto
     ): Call<ResponseSignInDto>
 
-    @GET("/user/my-hobby")
+    @GET("/$USER/$MY_HOBBY")
     fun getHobby(
         @Header("token")
         token: String
     ): Call<ResponseHobbyDto>
+
+    companion object {
+        const val USER = "user"
+        const val LOGIN = "login"
+        const val MY_HOBBY = "my-hobby"
+    }
 }
