@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.sopt.and.api.ServicePool.authService
 import org.sopt.and.api.dto.request.RequestSignInDto
@@ -14,7 +16,9 @@ import org.sopt.and.api.dto.response.ResponseSignInDto
 import org.sopt.and.utils.toast
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 
 class SignInViewModel(context: Context) : ViewModel() {
 
@@ -42,38 +46,46 @@ class SignInViewModel(context: Context) : ViewModel() {
     fun signIn(
         context: Context,
         onSuccess: (String) -> Unit,
-        onFailure: () -> Unit
+        onFailure: (String) -> Unit
     ) {
         val request = RequestSignInDto(username = _username.value, password = _password.value)
 
-        authService.signIn(request).enqueue(object : Callback<ResponseSignInDto> {
-            override fun onResponse(call: Call<ResponseSignInDto>, response: Response<ResponseSignInDto>) {
-                if (response.isSuccessful && response.body()?.result?.token != null) {
-                    val token = response.body()!!.result.token
+        viewModelScope.launch {
+            runCatching {
+                authService.signIn(request)
+            }.onSuccess { response ->
+                if (response.result.token.isNotEmpty()) {
+                    val token = response.result.token
                     saveToken(token)
                     onSuccess(token)
-                    context.toast("로그인 성공")
                 } else {
-                    handleSignInError(context, response)
-                    onFailure()
+                    onFailure("로그인에 실패하였습니다.")
                 }
+            }.onFailure { throwable ->
+                val errorMessage = handleSignInError(throwable)
+                onFailure(errorMessage)
             }
-
-            override fun onFailure(call: Call<ResponseSignInDto>, t: Throwable) {
-                context.toast("네트워크 오류: ${t.message}")
-                onFailure()
-            }
-        })
+        }
     }
 
-    private fun handleSignInError(context: Context, response: Response<ResponseSignInDto>) {
-        val errorBody = response.errorBody()?.string()
-        val errorDto = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it) }
-
-        val message = when (errorDto?.code) {
-            "00" -> "Username이나 비밀번호가 틀렸습니다."
-            else -> "로그인에 실패하였습니다."
+    private fun handleSignInError(throwable: Throwable): String {
+        return when (throwable) {
+            is HttpException -> {
+                val errorBody = throwable.response()?.errorBody()?.string()
+                val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
+                when (throwable.code()) {
+                    400 -> when (errorCode) {
+                        "01" -> "request body가 유효하지 않습니다."
+                        "02" -> "로그인 요청 정보가 잘못되었습니다. (올바르지 않은 password)"
+                        else -> "잘못된 요청입니다."
+                    }
+                    403 -> "password가 틀렸습니다."
+                    404 -> "유효하지 않은 경로 요청입니다."
+                    else -> "서버 오류 발생 (${throwable.code()})"
+                }
+            }
+            is IOException -> "네트워크 오류: ${throwable.message}"
+            else -> "unexpected error"
         }
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }

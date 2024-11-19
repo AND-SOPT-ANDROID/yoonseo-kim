@@ -65,16 +65,16 @@ class SignUpViewModel : ViewModel() {
                 onSuccess()
             }.onFailure { throwable ->
                 val errorMessage = when (throwable) {
-                    is HttpException -> handleError(throwable)
+                    is HttpException -> handleSignUpError(throwable)
                     is IOException -> "네트워크 오류: ${throwable.message}"
-                    else -> "예기치 못한 오류가 발생했습니다."
+                    else -> "unexpected error"
                 }
                 onFailure(errorMessage)
             }
         }
     }
 
-    private fun handleError(exception: HttpException): String {
+    private fun handleSignUpError(exception: HttpException): String {
         val errorBody = exception.response()?.errorBody()?.string()
         val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
         return when (exception.code()) {

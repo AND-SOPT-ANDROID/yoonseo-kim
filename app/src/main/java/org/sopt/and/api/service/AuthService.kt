@@ -18,9 +18,9 @@ interface AuthService {
     ): ResponseSignUpDto
 
     @POST("/$LOGIN")
-    fun signIn(
+    suspend fun signIn(
         @Body request: RequestSignInDto
-    ): Call<ResponseSignInDto>
+    ): ResponseSignInDto
 
     @GET("/$USER/$MY_HOBBY")
     fun getHobby(
