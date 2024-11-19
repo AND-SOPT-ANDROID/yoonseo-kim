@@ -88,7 +88,7 @@ fun SignInScreen(
             Button(
                 onClick = {
                     viewModel.signIn(
-                        onSuccess = { token ->
+                        onSuccess = {
                             onSignInSuccess()
                             context.toast(context.getString(R.string.sign_in_success))
                         },

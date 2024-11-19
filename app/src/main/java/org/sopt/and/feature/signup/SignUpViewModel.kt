@@ -10,6 +10,9 @@ import org.sopt.and.R
 import org.sopt.and.api.ServicePool.authService
 import org.sopt.and.api.dto.request.RequestSignUpDto
 import org.sopt.and.api.dto.response.ResponseErrorDto
+import org.sopt.and.utils.KeyStorage.ERROR_CODE_00
+import org.sopt.and.utils.KeyStorage.ERROR_CODE_01
+import org.sopt.and.utils.KeyStorage.TEXTFIELD_MAX_LENGTH
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -24,32 +27,32 @@ class SignUpViewModel : ViewModel() {
     val hobby: StateFlow<String> = _hobby
 
     fun updateUsername(newUsername: String) {
-        if (newUsername.length <= 8) {
+        if (newUsername.length <= TEXTFIELD_MAX_LENGTH) {
             _username.value = newUsername
         }
     }
 
     fun updatePassword(newPassword: String) {
-        if (newPassword.length <= 8) {
+        if (newPassword.length <= TEXTFIELD_MAX_LENGTH) {
             _password.value = newPassword
         }
     }
 
     fun updateHobby(newHobby: String) {
-        if (newHobby.length <= 8) {
+        if (newHobby.length <= TEXTFIELD_MAX_LENGTH) {
             _hobby.value = newHobby
         }
     }
 
     private fun isValidUser(): Boolean {
-        return username.value.length <= 8 &&
-                password.value.length <= 8 &&
-                hobby.value.length <= 8
+        return username.value.length <= TEXTFIELD_MAX_LENGTH &&
+                password.value.length <= TEXTFIELD_MAX_LENGTH &&
+                hobby.value.length <= TEXTFIELD_MAX_LENGTH
     }
 
     fun signUp(onSuccess: () -> Unit, onFailure: (Int) -> Unit) {
         if (!isValidUser()) {
-            // onFailure("유효하지 않은 사용자 정보입니다.")
+            onFailure(R.string.error_message_invalid_user_info)
             return
         }
 
@@ -62,7 +65,7 @@ class SignUpViewModel : ViewModel() {
         viewModelScope.launch {
             runCatching {
                 authService.signUp(request)
-            }.onSuccess { response ->
+            }.onSuccess {
                 onSuccess()
             }.onFailure { throwable ->
                 val errorMessage = when (throwable) {
@@ -80,8 +83,8 @@ class SignUpViewModel : ViewModel() {
         val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
         return when (exception.code()) {
             400 -> when (errorCode) {
-                "00" -> R.string.error_message_invalid_request_body
-                "01" -> R.string.error_message_under_8_letters
+                ERROR_CODE_00 -> R.string.error_message_invalid_request_body
+                ERROR_CODE_01 -> R.string.error_message_under_8_letters
                 else -> R.string.error_message_wrong_request
             }
             404 -> R.string.error_message_invalid_url_request

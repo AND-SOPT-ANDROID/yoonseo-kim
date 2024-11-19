@@ -5,7 +5,6 @@ import org.sopt.and.api.dto.request.RequestSignUpDto
 import org.sopt.and.api.dto.response.ResponseHobbyDto
 import org.sopt.and.api.dto.response.ResponseSignInDto
 import org.sopt.and.api.dto.response.ResponseSignUpDto
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -23,10 +22,10 @@ interface AuthService {
     ): ResponseSignInDto
 
     @GET("/$USER/$MY_HOBBY")
-    fun getHobby(
+    suspend fun getHobby(
         @Header("token")
         token: String
-    ): Call<ResponseHobbyDto>
+    ): ResponseHobbyDto
 
     companion object {
         const val USER = "user"

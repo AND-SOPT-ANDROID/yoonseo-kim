@@ -9,4 +9,9 @@ object KeyStorage {
     const val HOME = "home"
     const val SEARCH = "search"
     const val MY_PAGE = "myPage"
+    const val TOKEN = "token"
+    const val AUTH_PREFS = "auth_prefs"
+    const val ERROR_CODE_00 = "00"
+    const val ERROR_CODE_01 = "01"
+    const val ERROR_CODE_02 = "02"
 }

@@ -12,13 +12,17 @@ import org.sopt.and.R
 import org.sopt.and.api.ServicePool.authService
 import org.sopt.and.api.dto.request.RequestSignInDto
 import org.sopt.and.api.dto.response.ResponseErrorDto
+import org.sopt.and.utils.KeyStorage.AUTH_PREFS
+import org.sopt.and.utils.KeyStorage.ERROR_CODE_01
+import org.sopt.and.utils.KeyStorage.ERROR_CODE_02
+import org.sopt.and.utils.KeyStorage.TOKEN
 import retrofit2.HttpException
 import java.io.IOException
 
 class SignInViewModel(context: Context) : ViewModel() {
 
     private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        context.getSharedPreferences(AUTH_PREFS, Context.MODE_PRIVATE)
 
     private val _username = MutableStateFlow("")
     val username: StateFlow<String> = _username
@@ -35,7 +39,7 @@ class SignInViewModel(context: Context) : ViewModel() {
     }
 
     private fun saveToken(token: String) {
-        sharedPreferences?.edit()?.putString("token", token)?.apply()
+        sharedPreferences?.edit()?.putString(TOKEN, token)?.apply()
     }
 
     fun signIn(
@@ -69,8 +73,8 @@ class SignInViewModel(context: Context) : ViewModel() {
                 val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
                 when (throwable.code()) {
                     400 -> when (errorCode) {
-                        "01" -> R.string.error_message_invalid_request_body
-                        "02" -> R.string.error_message_invalid_password
+                        ERROR_CODE_01 -> R.string.error_message_invalid_request_body
+                        ERROR_CODE_02 -> R.string.error_message_invalid_password
                         else -> R.string.error_message_wrong_request
                     }
                     403 -> R.string.error_message_wrong_password

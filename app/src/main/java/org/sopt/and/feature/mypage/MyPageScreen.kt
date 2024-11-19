@@ -17,6 +17,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,6 +34,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
 import org.sopt.and.component.MyPageHistoryItem
 import org.sopt.and.component.MyPagePurchaseItem
+import org.sopt.and.utils.KeyStorage.AUTH_PREFS
+import org.sopt.and.utils.KeyStorage.TOKEN
 
 @Composable
 fun MyPageScreen(
@@ -40,12 +43,14 @@ fun MyPageScreen(
     viewModel: MyPageViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-    val token = sharedPreferences.getString("token", "") ?: ""
-
-    viewModel.initHobby(token)
+    val sharedPreferences = context.getSharedPreferences(AUTH_PREFS, Context.MODE_PRIVATE)
+    val token = sharedPreferences.getString(TOKEN, "").orEmpty()
 
     val hobby by viewModel.hobby.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.initHobby(token)
+    }
 
     Column (
         modifier = Modifier
