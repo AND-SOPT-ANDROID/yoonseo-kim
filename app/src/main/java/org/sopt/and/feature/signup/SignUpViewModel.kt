@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import org.sopt.and.R
 import org.sopt.and.api.ServicePool.authService
 import org.sopt.and.api.dto.request.RequestSignUpDto
 import org.sopt.and.api.dto.response.ResponseErrorDto
@@ -46,9 +47,9 @@ class SignUpViewModel : ViewModel() {
                 hobby.value.length <= 8
     }
 
-    fun signUp(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun signUp(onSuccess: () -> Unit, onFailure: (Int) -> Unit) {
         if (!isValidUser()) {
-            onFailure("유효하지 않은 사용자 정보입니다.")
+            // onFailure("유효하지 않은 사용자 정보입니다.")
             return
         }
 
@@ -66,26 +67,26 @@ class SignUpViewModel : ViewModel() {
             }.onFailure { throwable ->
                 val errorMessage = when (throwable) {
                     is HttpException -> handleSignUpError(throwable)
-                    is IOException -> "네트워크 오류: ${throwable.message}"
-                    else -> "unexpected error"
+                    is IOException -> R.string.error_message_network_error
+                    else -> R.string.error_message_unexpected_error
                 }
                 onFailure(errorMessage)
             }
         }
     }
 
-    private fun handleSignUpError(exception: HttpException): String {
+    private fun handleSignUpError(exception: HttpException): Int {
         val errorBody = exception.response()?.errorBody()?.string()
         val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
         return when (exception.code()) {
             400 -> when (errorCode) {
-                "00" -> "request body가 유효하지 않습니다."
-                "01" -> "username, password, hobby는 8자 이하여야 합니다."
-                else -> "잘못된 요청입니다."
+                "00" -> R.string.error_message_invalid_request_body
+                "01" -> R.string.error_message_under_8_letters
+                else -> R.string.error_message_wrong_request
             }
-            404 -> "유효하지 않은 경로 요청입니다."
-            409 -> "중복된 username입니다."
-            else -> "서버 오류 발생 (${exception.code()})"
+            404 -> R.string.error_message_invalid_url_request
+            409 -> R.string.error_message_duplicate_username
+            else -> R.string.error_message_server_error
         }
     }
 }

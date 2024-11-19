@@ -35,6 +35,16 @@
 
     <!-- Sign In, Sign Up 공통 -->
     <string name="logo_images_description">logo images</string>
+    <string name="error_message_invalid_request_body">request body가 유효하지 않습니다.</string>
+    <string name="error_message_invalid_password">로그인 요청 정보가 잘못되었습니다. (올바르지 않은 password)</string>
+    <string name="error_message_under_8_letters">username, password, hobby는 8자 이하여야 합니다.</string>
+    <string name="error_message_wrong_request">잘못된 요청입니다.</string>
+    <string name="error_message_wrong_password">password가 틀렸습니다.</string>
+    <string name="error_message_duplicate_username">중복된 username입니다.</string>
+    <string name="error_message_invalid_url_request">유효하지 않은 경로 요청입니다.</string>
+    <string name="error_message_unexpected_error">예기치 못한 요청입니다.</string>
+    <string name="error_message_server_error">서버 오류 발생</string>
+    <string name="error_message_network_error">네트워크 오류</string>
 
     <!-- My Page Screen -->
     <string name="my_page_profile_name">%1$s님</string>

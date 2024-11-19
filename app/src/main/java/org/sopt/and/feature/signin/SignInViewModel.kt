@@ -2,22 +2,17 @@ package org.sopt.and.feature.signin
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import org.sopt.and.R
 import org.sopt.and.api.ServicePool.authService
 import org.sopt.and.api.dto.request.RequestSignInDto
 import org.sopt.and.api.dto.response.ResponseErrorDto
-import org.sopt.and.api.dto.response.ResponseSignInDto
-import org.sopt.and.utils.toast
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.HttpException
-import retrofit2.Response
 import java.io.IOException
 
 class SignInViewModel(context: Context) : ViewModel() {
@@ -44,9 +39,8 @@ class SignInViewModel(context: Context) : ViewModel() {
     }
 
     fun signIn(
-        context: Context,
         onSuccess: (String) -> Unit,
-        onFailure: (String) -> Unit
+        onFailure: (Int) -> Unit
     ) {
         val request = RequestSignInDto(username = _username.value, password = _password.value)
 
@@ -59,33 +53,33 @@ class SignInViewModel(context: Context) : ViewModel() {
                     saveToken(token)
                     onSuccess(token)
                 } else {
-                    onFailure("로그인에 실패하였습니다.")
+                    onFailure(R.string.sign_in_failure)
                 }
             }.onFailure { throwable ->
-                val errorMessage = handleSignInError(throwable)
-                onFailure(errorMessage)
+                val errorMessageId = handleSignInError(throwable)
+                onFailure(errorMessageId)
             }
         }
     }
 
-    private fun handleSignInError(throwable: Throwable): String {
+    private fun handleSignInError(throwable: Throwable): Int {
         return when (throwable) {
             is HttpException -> {
                 val errorBody = throwable.response()?.errorBody()?.string()
                 val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
                 when (throwable.code()) {
                     400 -> when (errorCode) {
-                        "01" -> "request body가 유효하지 않습니다."
-                        "02" -> "로그인 요청 정보가 잘못되었습니다. (올바르지 않은 password)"
-                        else -> "잘못된 요청입니다."
+                        "01" -> R.string.error_message_invalid_request_body
+                        "02" -> R.string.error_message_invalid_password
+                        else -> R.string.error_message_wrong_request
                     }
-                    403 -> "password가 틀렸습니다."
-                    404 -> "유효하지 않은 경로 요청입니다."
-                    else -> "서버 오류 발생 (${throwable.code()})"
+                    403 -> R.string.error_message_wrong_password
+                    404 -> R.string.error_message_invalid_url_request
+                    else -> R.string.error_message_server_error
                 }
             }
-            is IOException -> "네트워크 오류: ${throwable.message}"
-            else -> "unexpected error"
+            is IOException -> R.string.error_message_network_error
+            else -> R.string.error_message_unexpected_error
         }
     }
 }

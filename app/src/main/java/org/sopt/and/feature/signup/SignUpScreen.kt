@@ -148,8 +148,8 @@ fun SignUpScreen(
                         onSignUpSuccess()
                         context.toast(context.getString(R.string.sign_up_success))
                     },
-                    onFailure = {
-                        context.toast(context.getString(R.string.sign_up_failure))
+                    onFailure = { errorMessageId ->
+                        context.toast(context.getString(errorMessageId))
                     }
                 )
             },

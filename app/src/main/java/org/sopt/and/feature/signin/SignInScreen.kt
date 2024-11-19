@@ -42,7 +42,6 @@ fun SignInScreen(
     snackbarHostState: SnackbarHostState,
     onSignUpClick: () -> Unit,
     onSignInSuccess: () -> Unit,
-    // viewModel: SignInViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -89,13 +88,12 @@ fun SignInScreen(
             Button(
                 onClick = {
                     viewModel.signIn(
-                        context = context,
                         onSuccess = { token ->
                             onSignInSuccess()
-                            context.toast("로그인 성공")
+                            context.toast(context.getString(R.string.sign_in_success))
                         },
-                        onFailure = {
-                            context.toast("로그인 실패")
+                        onFailure = { errorMessageId ->
+                            context.toast(context.getString(errorMessageId))
                         }
                     )
                 },
