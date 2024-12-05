@@ -13,12 +13,13 @@ import org.sopt.and.api.ServicePool.authService
 import org.sopt.and.api.dto.response.ResponseErrorDto
 import org.sopt.and.utils.KeyStorage.AUTH_PREFS
 import org.sopt.and.utils.KeyStorage.ERROR_CODE_00
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_200
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_401
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_403
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_404
 import retrofit2.HttpException
 
-class MyPageViewModel(context: Context) : ViewModel() {
-
-    private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences(AUTH_PREFS, Context.MODE_PRIVATE)
+class MyPageViewModel : ViewModel() {
 
     private val _hobby = MutableStateFlow("")
     val hobby: StateFlow<String> get() = _hobby
@@ -38,7 +39,7 @@ class MyPageViewModel(context: Context) : ViewModel() {
                 if (hobby.isNotEmpty()) {
                     _hobby.value = hobby
                 } else {
-                    handleError(200, ERROR_CODE_00)
+                    handleError(STATUS_CODE_200, ERROR_CODE_00)
                 }
             }.onFailure { throwable ->
                 when (throwable) {
@@ -57,9 +58,9 @@ class MyPageViewModel(context: Context) : ViewModel() {
 
     private fun handleError(statusCode: Int, errorCode: String) {
         val message = when (statusCode) {
-            401 -> R.string.error_message_token_blank
-            403 -> R.string.error_message_invalid_token
-            404 -> R.string.error_message_invalid_url_request
+            STATUS_CODE_401 -> R.string.error_message_token_blank
+            STATUS_CODE_403 -> R.string.error_message_invalid_token
+            STATUS_CODE_404 -> R.string.error_message_invalid_url_request
             else -> when (errorCode) {
                 ERROR_CODE_00 -> R.string.error_message_error_loading_hobby
                 else -> R.string.error_message_unknown_error

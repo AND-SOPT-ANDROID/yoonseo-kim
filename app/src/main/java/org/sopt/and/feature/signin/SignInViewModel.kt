@@ -15,14 +15,16 @@ import org.sopt.and.api.dto.response.ResponseErrorDto
 import org.sopt.and.utils.KeyStorage.AUTH_PREFS
 import org.sopt.and.utils.KeyStorage.ERROR_CODE_01
 import org.sopt.and.utils.KeyStorage.ERROR_CODE_02
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_400
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_403
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_404
 import org.sopt.and.utils.KeyStorage.TOKEN
 import retrofit2.HttpException
 import java.io.IOException
 
-class SignInViewModel(context: Context) : ViewModel() {
-
-    private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences(AUTH_PREFS, Context.MODE_PRIVATE)
+class SignInViewModel(
+    private val sharedPreferences: SharedPreferences
+) : ViewModel() {
 
     private val _username = MutableStateFlow("")
     val username: StateFlow<String> = _username
@@ -72,13 +74,13 @@ class SignInViewModel(context: Context) : ViewModel() {
                 val errorBody = throwable.response()?.errorBody()?.string()
                 val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
                 when (throwable.code()) {
-                    400 -> when (errorCode) {
+                    STATUS_CODE_400 -> when (errorCode) {
                         ERROR_CODE_01 -> R.string.error_message_invalid_request_body
                         ERROR_CODE_02 -> R.string.error_message_invalid_password
                         else -> R.string.error_message_wrong_request
                     }
-                    403 -> R.string.error_message_wrong_password
-                    404 -> R.string.error_message_invalid_url_request
+                    STATUS_CODE_403 -> R.string.error_message_wrong_password
+                    STATUS_CODE_404 -> R.string.error_message_invalid_url_request
                     else -> R.string.error_message_server_error
                 }
             }

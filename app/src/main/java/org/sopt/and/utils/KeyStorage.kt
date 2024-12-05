@@ -14,4 +14,10 @@ object KeyStorage {
     const val ERROR_CODE_00 = "00"
     const val ERROR_CODE_01 = "01"
     const val ERROR_CODE_02 = "02"
+    const val STATUS_CODE_200 = 200
+    const val STATUS_CODE_400 = 400
+    const val STATUS_CODE_401 = 401
+    const val STATUS_CODE_403 = 403
+    const val STATUS_CODE_404 = 404
+    const val STATUS_CODE_409 = 409
 }

@@ -12,6 +12,9 @@ import org.sopt.and.api.dto.request.RequestSignUpDto
 import org.sopt.and.api.dto.response.ResponseErrorDto
 import org.sopt.and.utils.KeyStorage.ERROR_CODE_00
 import org.sopt.and.utils.KeyStorage.ERROR_CODE_01
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_400
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_404
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_409
 import org.sopt.and.utils.KeyStorage.TEXTFIELD_MAX_LENGTH
 import retrofit2.HttpException
 import java.io.IOException
@@ -82,13 +85,13 @@ class SignUpViewModel : ViewModel() {
         val errorBody = exception.response()?.errorBody()?.string()
         val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
         return when (exception.code()) {
-            400 -> when (errorCode) {
+            STATUS_CODE_400 -> when (errorCode) {
                 ERROR_CODE_00 -> R.string.error_message_invalid_request_body
                 ERROR_CODE_01 -> R.string.error_message_under_8_letters
                 else -> R.string.error_message_wrong_request
             }
-            404 -> R.string.error_message_invalid_url_request
-            409 -> R.string.error_message_duplicate_username
+            STATUS_CODE_404 -> R.string.error_message_invalid_url_request
+            STATUS_CODE_409 -> R.string.error_message_duplicate_username
             else -> R.string.error_message_server_error
         }
     }

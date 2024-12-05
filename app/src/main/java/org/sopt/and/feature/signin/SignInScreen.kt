@@ -1,5 +1,6 @@
 package org.sopt.and.feature.signin
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,12 +41,13 @@ import org.sopt.and.utils.toast
 fun SignInScreen(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
+    sharedPreferences: SharedPreferences,
     onSignUpClick: () -> Unit,
     onSignInSuccess: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val viewModel = remember { SignInViewModel(context) }
+    val viewModel = remember { SignInViewModel(sharedPreferences) }
     val username by viewModel.username.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()

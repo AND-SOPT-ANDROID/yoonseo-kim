@@ -1,6 +1,7 @@
 package org.sopt.and
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,6 +20,7 @@ import org.sopt.and.feature.nav.BottomNavigation
 import org.sopt.and.feature.signin.SignInScreen
 import org.sopt.and.feature.signup.SignUpScreen
 import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.utils.KeyStorage.AUTH_PREFS
 import org.sopt.and.utils.KeyStorage.HOME
 import org.sopt.and.utils.KeyStorage.SIGN_IN
 import org.sopt.and.utils.KeyStorage.SIGN_UP
@@ -30,7 +32,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ANDANDROIDTheme {
                 val navController = rememberNavController()
-                MainScreen(navController)
+                val sharedPreferences = getSharedPreferences(AUTH_PREFS, MODE_PRIVATE)
+                MainScreen(navController, sharedPreferences)
             }
         }
     }
@@ -38,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController, sharedPreferences: SharedPreferences) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -49,6 +52,7 @@ fun MainScreen(navController: NavHostController) {
                 SignInScreen(
                     navController = navController,
                     snackbarHostState = snackbarHostState,
+                    sharedPreferences = sharedPreferences,
                     onSignUpClick = {
                         navController.navigate(SIGN_UP)
                     },

@@ -19,8 +19,6 @@ fun NavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-
     NavHost(
         navController = navController,
         startDestination = HOME,
@@ -33,7 +31,7 @@ fun NavGraph(
             SearchScreen()
         }
         composable(MY_PAGE) {
-            MyPageScreen(viewModel = MyPageViewModel(context))
+            MyPageScreen(viewModel = MyPageViewModel())
         }
     }
 }
