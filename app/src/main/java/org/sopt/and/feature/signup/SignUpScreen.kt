@@ -33,11 +33,12 @@ import org.sopt.and.utils.toast
 fun SignUpScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    onSignUpSuccess: (email: String, password: String) -> Unit,
+    onSignUpSuccess: () -> Unit,
     viewModel: SignUpViewModel = viewModel(),
 ) {
-    val email by viewModel.email.collectAsStateWithLifecycle()
+    val username by viewModel.username.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
+    val hobby by viewModel.hobby.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
 
@@ -66,9 +67,9 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(30.dp))
 
         WavveCustomTextField(
-            value = email,
-            onValueChange = { viewModel.updateEmail(it) },
-            hint = stringResource(R.string.sign_up_email_hint)
+            value = username,
+            onValueChange = { viewModel.updateUsername(it) },
+            hint = stringResource(R.string.sign_up_username_hint)
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -104,6 +105,25 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
+        WavveCustomTextField(
+            value = hobby,
+            onValueChange = { viewModel.updateHobby(it) },
+            hint = stringResource(R.string.sign_up_hobby_hint)
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(
+            text = stringResource(R.string.sign_up_hobby_description),
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.text_default_gray),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp),
+        )
+
+        Spacer(modifier = Modifier.height(40.dp))
+
         SocialLoginItem(
             textResId = R.string.sign_up_social_service,
             imageResId = R.drawable.ic_logo_group
@@ -124,12 +144,12 @@ fun SignUpScreen(
         Button(
             onClick = {
                 viewModel.signUp(
-                    onSuccess = { email, password ->
-                        onSignUpSuccess(email, password)
+                    onSuccess = {
+                        onSignUpSuccess()
                         context.toast(context.getString(R.string.sign_up_success))
                     },
-                    onFailure = {
-                        context.toast(context.getString(R.string.sign_up_failure))
+                    onFailure = { errorMessageId ->
+                        context.toast(context.getString(errorMessageId))
                     }
                 )
             },

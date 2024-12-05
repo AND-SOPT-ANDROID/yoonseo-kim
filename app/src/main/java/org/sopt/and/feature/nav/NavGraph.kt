@@ -2,6 +2,7 @@ package org.sopt.and.feature.nav
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,7 +17,6 @@ import org.sopt.and.utils.KeyStorage.SEARCH
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    registeredEmail: String,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -31,7 +31,7 @@ fun NavGraph(
             SearchScreen()
         }
         composable(MY_PAGE) {
-            MyPageScreen(registeredEmail = registeredEmail, viewModel = MyPageViewModel())
+            MyPageScreen(viewModel = MyPageViewModel())
         }
     }
 }

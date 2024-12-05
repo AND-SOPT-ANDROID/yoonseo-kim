@@ -1,32 +1,26 @@
 package org.sopt.and
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.launch
 import org.sopt.and.feature.nav.BottomNavigation
 import org.sopt.and.feature.signin.SignInScreen
 import org.sopt.and.feature.signup.SignUpScreen
-import org.sopt.and.model.BottomNavItem
 import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.utils.KeyStorage.AUTH_PREFS
 import org.sopt.and.utils.KeyStorage.HOME
 import org.sopt.and.utils.KeyStorage.SIGN_IN
 import org.sopt.and.utils.KeyStorage.SIGN_UP
@@ -38,7 +32,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ANDANDROIDTheme {
                 val navController = rememberNavController()
-                MainScreen(navController)
+                val sharedPreferences = getSharedPreferences(AUTH_PREFS, MODE_PRIVATE)
+                MainScreen(navController, sharedPreferences)
             }
         }
     }
@@ -46,12 +41,8 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController, sharedPreferences: SharedPreferences) {
     val snackbarHostState = remember { SnackbarHostState() }
-    var registeredEmail by remember { mutableStateOf("") }
-    var registeredPassword by remember { mutableStateOf("") }
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
@@ -60,25 +51,17 @@ fun MainScreen(navController: NavHostController) {
             composable(SIGN_IN) {
                 SignInScreen(
                     navController = navController,
-                    registeredEmail = registeredEmail,
-                    registeredPassword = registeredPassword,
                     snackbarHostState = snackbarHostState,
+                    sharedPreferences = sharedPreferences,
                     onSignUpClick = {
                         navController.navigate(SIGN_UP)
                     },
-                    onSignInSuccess = { email ->
-                        registeredEmail = email
-                        scope.launch {
-                            navController.navigate(BottomNavItem.Home.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    inclusive = true
-                                }
-                                launchSingleTop = true
+                    onSignInSuccess = {
+                        navController.navigate(HOME) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true
                             }
-                            snackbarHostState.showSnackbar(
-                                message = context.getString(R.string.sign_in_success),
-                                duration = SnackbarDuration.Short
-                            )
+                            launchSingleTop = true
                         }
                     },
                     modifier = Modifier
@@ -87,9 +70,7 @@ fun MainScreen(navController: NavHostController) {
             composable(SIGN_UP) {
                 SignUpScreen(
                     navController,
-                    onSignUpSuccess = { email, password ->
-                        registeredEmail = email
-                        registeredPassword = password
+                    onSignUpSuccess = {
                         navController.popBackStack()
                     },
                     modifier = Modifier
@@ -97,7 +78,6 @@ fun MainScreen(navController: NavHostController) {
             }
             composable(HOME) {
                 BottomNavigation(
-                    registeredEmail,
                     modifier = Modifier
                 )
             }

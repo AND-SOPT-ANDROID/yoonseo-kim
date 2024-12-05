@@ -1,5 +1,6 @@
 package org.sopt.and.feature.mypage
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,10 +18,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,16 +34,21 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
 import org.sopt.and.component.MyPageHistoryItem
 import org.sopt.and.component.MyPagePurchaseItem
+import org.sopt.and.utils.KeyStorage.AUTH_PREFS
+import org.sopt.and.utils.KeyStorage.TOKEN
 
 @Composable
 fun MyPageScreen(
-    registeredEmail: String,
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = viewModel()
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.initUserName(registeredEmail)
-    }
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences(AUTH_PREFS, Context.MODE_PRIVATE)
+    val token = sharedPreferences.getString(TOKEN, "").orEmpty()
+
+    val hobby by viewModel.hobby.collectAsState()
+
+    viewModel.initHobby(token)
 
     Column (
         modifier = Modifier
@@ -69,7 +78,7 @@ fun MyPageScreen(
             Spacer(modifier = Modifier.width(16.dp))
 
             Text(
-                text = stringResource(R.string.my_page_profile_name, registeredEmail),
+                text = hobby,
                 fontSize = 18.sp,
                 color = Color.White,
                 modifier = Modifier.weight(1f)

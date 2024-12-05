@@ -1,62 +1,98 @@
 package org.sopt.and.feature.signup
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import org.sopt.and.utils.KeyStorage.EMAIL_PATTERN
-import org.sopt.and.utils.KeyStorage.PASSWORD_MAX_LENGTH
-import org.sopt.and.utils.KeyStorage.PASSWORD_MIN_LENGTH
-import org.sopt.and.utils.KeyStorage.PASSWORD_PATTERN
-import java.util.regex.Pattern
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import org.sopt.and.R
+import org.sopt.and.api.ServicePool.authService
+import org.sopt.and.api.dto.request.RequestSignUpDto
+import org.sopt.and.api.dto.response.ResponseErrorDto
+import org.sopt.and.utils.KeyStorage.ERROR_CODE_00
+import org.sopt.and.utils.KeyStorage.ERROR_CODE_01
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_400
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_404
+import org.sopt.and.utils.KeyStorage.STATUS_CODE_409
+import org.sopt.and.utils.KeyStorage.TEXTFIELD_MAX_LENGTH
+import retrofit2.HttpException
+import java.io.IOException
 
 class SignUpViewModel : ViewModel() {
-    private val _email = MutableStateFlow("")
-    val email: StateFlow<String> = _email
+    private val _username = MutableStateFlow("")
+    val username: StateFlow<String> = _username
 
     private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password
 
-    fun updateEmail(newEmail: String) {
-        _email.value = newEmail
+    private val _hobby = MutableStateFlow("")
+    val hobby: StateFlow<String> = _hobby
+
+    fun updateUsername(newUsername: String) {
+        if (newUsername.length <= TEXTFIELD_MAX_LENGTH) {
+            _username.value = newUsername
+        }
     }
 
     fun updatePassword(newPassword: String) {
-        _password.value = newPassword
+        if (newPassword.length <= TEXTFIELD_MAX_LENGTH) {
+            _password.value = newPassword
+        }
     }
 
-    private fun isValidEmail(): Boolean {
-        val emailPattern = EMAIL_PATTERN
-        return Pattern.matches(emailPattern, email.value)
+    fun updateHobby(newHobby: String) {
+        if (newHobby.length <= TEXTFIELD_MAX_LENGTH) {
+            _hobby.value = newHobby
+        }
     }
 
-    private fun isValidPassword(): Boolean {
-        var hasLowercase = false
-        var hasUppercase = false
-        var hasDigit = false
-        var hasSpecialChar = false
+    private fun isValidUser(): Boolean {
+        return username.value.length <= TEXTFIELD_MAX_LENGTH &&
+                password.value.length <= TEXTFIELD_MAX_LENGTH &&
+                hobby.value.length <= TEXTFIELD_MAX_LENGTH
+    }
 
-        for (char in password.value) {
-            when {
-                char.isLowerCase() -> hasLowercase = true
-                char.isUpperCase() -> hasUppercase = true
-                char.isDigit() -> hasDigit = true
-                PASSWORD_PATTERN.contains(char) -> hasSpecialChar = true
-            }
-
-            if (listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3) {
-                break
-            }
+    fun signUp(onSuccess: () -> Unit, onFailure: (Int) -> Unit) {
+        if (!isValidUser()) {
+            onFailure(R.string.error_message_invalid_user_info)
+            return
         }
 
-        return password.value.length in PASSWORD_MIN_LENGTH..PASSWORD_MAX_LENGTH &&
-                listOf(hasLowercase, hasUppercase, hasDigit, hasSpecialChar).count { it } >= 3
+        val request = RequestSignUpDto(
+            username = username.value,
+            password = password.value,
+            hobby = hobby.value
+        )
+
+        viewModelScope.launch {
+            runCatching {
+                authService.signUp(request)
+            }.onSuccess {
+                onSuccess()
+            }.onFailure { throwable ->
+                val errorMessage = when (throwable) {
+                    is HttpException -> handleSignUpError(throwable)
+                    is IOException -> R.string.error_message_network_error
+                    else -> R.string.error_message_unexpected_error
+                }
+                onFailure(errorMessage)
+            }
+        }
     }
 
-    fun signUp(onSuccess: (String, String) -> Unit, onFailure: () -> Unit) {
-        if (isValidEmail() && isValidPassword()) {
-            onSuccess(email.value, password.value)
-        } else {
-            onFailure()
+    private fun handleSignUpError(exception: HttpException): Int {
+        val errorBody = exception.response()?.errorBody()?.string()
+        val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
+        return when (exception.code()) {
+            STATUS_CODE_400 -> when (errorCode) {
+                ERROR_CODE_00 -> R.string.error_message_invalid_request_body
+                ERROR_CODE_01 -> R.string.error_message_under_8_letters
+                else -> R.string.error_message_wrong_request
+            }
+            STATUS_CODE_404 -> R.string.error_message_invalid_url_request
+            STATUS_CODE_409 -> R.string.error_message_duplicate_username
+            else -> R.string.error_message_server_error
         }
     }
 }

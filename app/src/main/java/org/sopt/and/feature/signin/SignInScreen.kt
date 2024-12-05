@@ -1,5 +1,6 @@
 package org.sopt.and.feature.signin
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,30 +29,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.component.SignInTopBar
 import org.sopt.and.component.SocialLoginItem
 import org.sopt.and.component.WavveCustomTextField
 import org.sopt.and.utils.noRippleClickable
+import org.sopt.and.utils.toast
 
 @Composable
 fun SignInScreen(
     navController: NavController,
-    registeredEmail: String?,
-    registeredPassword: String?,
     snackbarHostState: SnackbarHostState,
+    sharedPreferences: SharedPreferences,
     onSignUpClick: () -> Unit,
-    onSignInSuccess: (String) -> Unit,
-    viewModel: SignInViewModel = viewModel(),
+    onSignInSuccess: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val email by viewModel.email.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val viewModel = remember { SignInViewModel(sharedPreferences) }
+    val username by viewModel.username.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -71,9 +71,9 @@ fun SignInScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             WavveCustomTextField(
-                value = email,
-                onValueChange = viewModel::onEmailChanged,
-                hint = stringResource(R.string.sign_in_email_hint)
+                value = username,
+                onValueChange = viewModel::onUsernameChanged,
+                hint = stringResource(R.string.sign_in_username_hint)
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -90,16 +90,12 @@ fun SignInScreen(
             Button(
                 onClick = {
                     viewModel.signIn(
-                        registeredEmail = registeredEmail,
-                        registeredPassword = registeredPassword,
-                        snackbarHostState = snackbarHostState,
-                        onSuccess = { email ->
-                            onSignInSuccess(email)
+                        onSuccess = {
+                            onSignInSuccess()
+                            context.toast(context.getString(R.string.sign_in_success))
                         },
-                        onFailure = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(message = context.getString(R.string.sign_in_failure))
-                            }
+                        onFailure = { errorMessageId ->
+                            context.toast(context.getString(errorMessageId))
                         }
                     )
                 },

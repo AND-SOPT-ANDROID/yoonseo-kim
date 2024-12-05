@@ -17,7 +17,6 @@ import org.sopt.and.model.BottomNavItem
 
 @Composable
 fun BottomNavigation(
-    registeredEmail: String,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
@@ -57,7 +56,6 @@ fun BottomNavigation(
     ) { innerPadding ->
         NavGraph(
             navController = navController,
-            registeredEmail = registeredEmail,
             modifier = Modifier.padding(innerPadding)
         )
     }
