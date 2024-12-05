@@ -48,9 +48,7 @@ fun MyPageScreen(
 
     val hobby by viewModel.hobby.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.initHobby(token)
-    }
+    viewModel.initHobby(token)
 
     Column (
         modifier = Modifier
