@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ResponseSignUpDto(
     @SerialName("no")
-    val no: Int
+    val userNumber: Int
 )
