@@ -2,6 +2,7 @@ package org.sopt.and.api.service
 
 import org.sopt.and.api.dto.request.RequestSignInDto
 import org.sopt.and.api.dto.request.RequestSignUpDto
+import org.sopt.and.api.dto.response.BaseResponse
 import org.sopt.and.api.dto.response.ResponseHobbyDto
 import org.sopt.and.api.dto.response.ResponseSignInDto
 import org.sopt.and.api.dto.response.ResponseSignUpDto
@@ -14,18 +15,18 @@ interface AuthService {
     @POST("/$USER")
     suspend fun signUp(
         @Body request: RequestSignUpDto
-    ): ResponseSignUpDto
+    ): BaseResponse<ResponseSignUpDto>
 
     @POST("/$LOGIN")
     suspend fun signIn(
         @Body request: RequestSignInDto
-    ): ResponseSignInDto
+    ): BaseResponse<ResponseSignInDto>
 
     @GET("/$USER/$MY_HOBBY")
     suspend fun getHobby(
         @Header("token")
         token: String
-    ): ResponseHobbyDto
+    ): BaseResponse<ResponseHobbyDto>
 
     companion object {
         const val USER = "user"
