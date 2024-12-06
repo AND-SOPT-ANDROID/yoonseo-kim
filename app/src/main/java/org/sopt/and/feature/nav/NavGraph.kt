@@ -10,9 +10,9 @@ import org.sopt.and.feature.home.HomeScreen
 import org.sopt.and.feature.mypage.MyPageScreen
 import org.sopt.and.feature.mypage.MyPageViewModel
 import org.sopt.and.feature.search.SearchScreen
-import org.sopt.and.utils.KeyStorage.HOME
-import org.sopt.and.utils.KeyStorage.MY_PAGE
-import org.sopt.and.utils.KeyStorage.SEARCH
+import org.sopt.and.core.utils.KeyStorage.HOME
+import org.sopt.and.core.utils.KeyStorage.MY_PAGE
+import org.sopt.and.core.utils.KeyStorage.SEARCH
 
 @Composable
 fun NavGraph(

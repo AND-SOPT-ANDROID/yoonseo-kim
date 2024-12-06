@@ -1,6 +1,5 @@
 package org.sopt.and.feature.signin
 
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,16 +8,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.sopt.and.R
-import org.sopt.and.api.ServicePool.authService
-import org.sopt.and.api.dto.request.RequestSignInDto
-import org.sopt.and.api.dto.response.ResponseErrorDto
-import org.sopt.and.utils.KeyStorage.AUTH_PREFS
-import org.sopt.and.utils.KeyStorage.ERROR_CODE_01
-import org.sopt.and.utils.KeyStorage.ERROR_CODE_02
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_400
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_403
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_404
-import org.sopt.and.utils.KeyStorage.TOKEN
+import org.sopt.and.data.ServicePool.authService
+import org.sopt.and.data.dto.request.RequestSignInDto
+import org.sopt.and.data.dto.response.ResponseErrorDto
+import org.sopt.and.core.utils.KeyStorage.ERROR_CODE_01
+import org.sopt.and.core.utils.KeyStorage.ERROR_CODE_02
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_400
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_403
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_404
+import org.sopt.and.core.utils.KeyStorage.TOKEN
 import retrofit2.HttpException
 import java.io.IOException
 

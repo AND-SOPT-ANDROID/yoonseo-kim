@@ -32,10 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
-import org.sopt.and.component.MyPageHistoryItem
-import org.sopt.and.component.MyPagePurchaseItem
-import org.sopt.and.utils.KeyStorage.AUTH_PREFS
-import org.sopt.and.utils.KeyStorage.TOKEN
+import org.sopt.and.core.designsystem.component.MyPageHistoryItem
+import org.sopt.and.core.designsystem.component.MyPagePurchaseItem
+import org.sopt.and.core.utils.KeyStorage.AUTH_PREFS
+import org.sopt.and.core.utils.KeyStorage.TOKEN
 
 @Composable
 fun MyPageScreen(

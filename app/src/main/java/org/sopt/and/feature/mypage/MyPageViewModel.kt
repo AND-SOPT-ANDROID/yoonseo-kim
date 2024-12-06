@@ -1,7 +1,5 @@
 package org.sopt.and.feature.mypage
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,14 +7,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.sopt.and.R
-import org.sopt.and.api.ServicePool.authService
-import org.sopt.and.api.dto.response.ResponseErrorDto
-import org.sopt.and.utils.KeyStorage.AUTH_PREFS
-import org.sopt.and.utils.KeyStorage.ERROR_CODE_00
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_200
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_401
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_403
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_404
+import org.sopt.and.data.ServicePool.authService
+import org.sopt.and.data.dto.response.ResponseErrorDto
+import org.sopt.and.core.utils.KeyStorage.ERROR_CODE_00
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_200
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_401
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_403
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_404
 import retrofit2.HttpException
 
 class MyPageViewModel : ViewModel() {

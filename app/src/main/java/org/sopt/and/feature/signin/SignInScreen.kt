@@ -31,11 +31,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import org.sopt.and.R
-import org.sopt.and.component.SignInTopBar
-import org.sopt.and.component.SocialLoginItem
-import org.sopt.and.component.WavveCustomTextField
-import org.sopt.and.utils.noRippleClickable
-import org.sopt.and.utils.toast
+import org.sopt.and.core.designsystem.component.SignInTopBar
+import org.sopt.and.core.designsystem.component.SocialLoginItem
+import org.sopt.and.core.designsystem.component.WavveCustomTextField
+import org.sopt.and.core.utils.modifier.noRippleClickable
+import org.sopt.and.core.utils.context.toast
 
 @Composable
 fun SignInScreen(
