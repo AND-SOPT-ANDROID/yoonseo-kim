@@ -28,14 +28,15 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.core.designsystem.component.SignInTopBar
 import org.sopt.and.core.designsystem.component.SocialLoginItem
 import org.sopt.and.core.designsystem.component.WavveCustomTextField
-import org.sopt.and.core.utils.modifier.noRippleClickable
 import org.sopt.and.core.utils.context.toast
+import org.sopt.and.core.utils.modifier.noRippleClickable
 
 @Composable
 fun SignInScreen(
@@ -47,7 +48,7 @@ fun SignInScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val viewModel = remember { SignInViewModel(sharedPreferences) }
+    val viewModel: SignInViewModel = hiltViewModel()
     val username by viewModel.username.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
