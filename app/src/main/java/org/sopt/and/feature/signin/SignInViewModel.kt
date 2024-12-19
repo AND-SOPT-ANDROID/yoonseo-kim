@@ -1,29 +1,31 @@
 package org.sopt.and.feature.signin
 
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.sopt.and.R
-import org.sopt.and.api.ServicePool.authService
-import org.sopt.and.api.dto.request.RequestSignInDto
-import org.sopt.and.api.dto.response.ResponseErrorDto
-import org.sopt.and.utils.KeyStorage.AUTH_PREFS
-import org.sopt.and.utils.KeyStorage.ERROR_CODE_01
-import org.sopt.and.utils.KeyStorage.ERROR_CODE_02
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_400
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_403
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_404
-import org.sopt.and.utils.KeyStorage.TOKEN
+import org.sopt.and.data.dto.response.ResponseErrorDto
+import org.sopt.and.core.utils.KeyStorage.ERROR_CODE_01
+import org.sopt.and.core.utils.KeyStorage.ERROR_CODE_02
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_400
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_403
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_404
+import org.sopt.and.core.utils.KeyStorage.TOKEN
+import org.sopt.and.domain.entity.SignInModel
+import org.sopt.and.domain.repository.AuthRepository
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class SignInViewModel(
-    private val sharedPreferences: SharedPreferences
+@HiltViewModel
+class SignInViewModel @Inject constructor(
+    private val sharedPreferences: SharedPreferences,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _username = MutableStateFlow("")
@@ -41,30 +43,25 @@ class SignInViewModel(
     }
 
     private fun saveToken(token: String) {
-        sharedPreferences?.edit()?.putString(TOKEN, token)?.apply()
+        sharedPreferences.edit()?.putString(TOKEN, token)?.apply()
     }
 
     fun signIn(
         onSuccess: (String) -> Unit,
         onFailure: (Int) -> Unit
     ) {
-        val request = RequestSignInDto(username = _username.value, password = _password.value)
+        val request = SignInModel(username = _username.value, password = _password.value)
 
         viewModelScope.launch {
-            runCatching {
-                authService.signIn(request)
-            }.onSuccess { response ->
-                if (response.result.token.isNotEmpty()) {
-                    val token = response.result.token
+            authRepository.signIn(request)
+                .onSuccess { token ->
                     saveToken(token)
                     onSuccess(token)
-                } else {
-                    onFailure(R.string.sign_in_failure)
                 }
-            }.onFailure { throwable ->
-                val errorMessageId = handleSignInError(throwable)
-                onFailure(errorMessageId)
-            }
+                .onFailure { throwable ->
+                    val errorMessageId = handleSignInError(throwable)
+                    onFailure(errorMessageId)
+                }
         }
     }
 

@@ -2,24 +2,29 @@ package org.sopt.and.feature.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.sopt.and.R
-import org.sopt.and.api.ServicePool.authService
-import org.sopt.and.api.dto.request.RequestSignUpDto
-import org.sopt.and.api.dto.response.ResponseErrorDto
-import org.sopt.and.utils.KeyStorage.ERROR_CODE_00
-import org.sopt.and.utils.KeyStorage.ERROR_CODE_01
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_400
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_404
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_409
-import org.sopt.and.utils.KeyStorage.TEXTFIELD_MAX_LENGTH
+import org.sopt.and.data.dto.response.ResponseErrorDto
+import org.sopt.and.core.utils.KeyStorage.ERROR_CODE_00
+import org.sopt.and.core.utils.KeyStorage.ERROR_CODE_01
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_400
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_404
+import org.sopt.and.core.utils.KeyStorage.STATUS_CODE_409
+import org.sopt.and.core.utils.KeyStorage.TEXTFIELD_MAX_LENGTH
+import org.sopt.and.domain.entity.SignUpModel
+import org.sopt.and.domain.repository.AuthRepository
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class SignUpViewModel : ViewModel() {
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
     private val _username = MutableStateFlow("")
     val username: StateFlow<String> = _username
 
@@ -59,7 +64,7 @@ class SignUpViewModel : ViewModel() {
             return
         }
 
-        val request = RequestSignUpDto(
+        val request = SignUpModel(
             username = username.value,
             password = password.value,
             hobby = hobby.value
@@ -67,7 +72,7 @@ class SignUpViewModel : ViewModel() {
 
         viewModelScope.launch {
             runCatching {
-                authService.signUp(request)
+                authRepository.signUp(request)
             }.onSuccess {
                 onSuccess()
             }.onFailure { throwable ->

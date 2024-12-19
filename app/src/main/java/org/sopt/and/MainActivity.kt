@@ -16,15 +16,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import org.sopt.and.feature.nav.BottomNavigation
 import org.sopt.and.feature.signin.SignInScreen
 import org.sopt.and.feature.signup.SignUpScreen
 import org.sopt.and.ui.theme.ANDANDROIDTheme
-import org.sopt.and.utils.KeyStorage.AUTH_PREFS
-import org.sopt.and.utils.KeyStorage.HOME
-import org.sopt.and.utils.KeyStorage.SIGN_IN
-import org.sopt.and.utils.KeyStorage.SIGN_UP
+import org.sopt.and.core.utils.KeyStorage.AUTH_PREFS
+import org.sopt.and.core.utils.KeyStorage.HOME
+import org.sopt.and.core.utils.KeyStorage.SIGN_IN
+import org.sopt.and.core.utils.KeyStorage.SIGN_UP
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

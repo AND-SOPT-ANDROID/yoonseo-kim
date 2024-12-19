@@ -20,21 +20,22 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.sopt.and.R
-import org.sopt.and.component.SignUpTopBar
-import org.sopt.and.component.SocialLoginItem
-import org.sopt.and.component.WavveCustomTextField
-import org.sopt.and.utils.toast
+import org.sopt.and.core.designsystem.component.SignUpTopBar
+import org.sopt.and.core.designsystem.component.SocialLoginItem
+import org.sopt.and.core.designsystem.component.WavveCustomTextField
+import org.sopt.and.core.utils.context.toast
 
 @Composable
 fun SignUpScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     onSignUpSuccess: () -> Unit,
-    viewModel: SignUpViewModel = viewModel(),
+    viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val username by viewModel.username.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()

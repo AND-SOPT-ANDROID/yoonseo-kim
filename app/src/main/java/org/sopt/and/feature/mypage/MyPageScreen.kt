@@ -30,17 +30,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import org.sopt.and.R
-import org.sopt.and.component.MyPageHistoryItem
-import org.sopt.and.component.MyPagePurchaseItem
-import org.sopt.and.utils.KeyStorage.AUTH_PREFS
-import org.sopt.and.utils.KeyStorage.TOKEN
+import org.sopt.and.core.designsystem.component.MyPageHistoryItem
+import org.sopt.and.core.designsystem.component.MyPagePurchaseItem
+import org.sopt.and.core.utils.KeyStorage.AUTH_PREFS
+import org.sopt.and.core.utils.KeyStorage.TOKEN
 
 @Composable
 fun MyPageScreen(
     modifier: Modifier = Modifier,
-    viewModel: MyPageViewModel = viewModel()
+    viewModel: MyPageViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences(AUTH_PREFS, Context.MODE_PRIVATE)
@@ -48,7 +48,9 @@ fun MyPageScreen(
 
     val hobby by viewModel.hobby.collectAsState()
 
-    viewModel.initHobby(token)
+    LaunchedEffect(Unit) {
+        viewModel.initHobby(token)
+    }
 
     Column (
         modifier = Modifier
