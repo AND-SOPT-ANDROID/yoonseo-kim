@@ -1,91 +1,53 @@
 package org.sopt.and.feature.signin
 
-import android.content.Context
 import android.content.SharedPreferences
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import org.sopt.and.R
-import org.sopt.and.api.ServicePool.authService
-import org.sopt.and.api.dto.request.RequestSignInDto
-import org.sopt.and.api.dto.response.ResponseErrorDto
-import org.sopt.and.utils.KeyStorage.AUTH_PREFS
-import org.sopt.and.utils.KeyStorage.ERROR_CODE_01
-import org.sopt.and.utils.KeyStorage.ERROR_CODE_02
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_400
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_403
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_404
-import org.sopt.and.utils.KeyStorage.TOKEN
-import retrofit2.HttpException
-import java.io.IOException
+import org.sopt.and.core.component.BaseViewModel
+import org.sopt.and.core.error.SignInErrorHandler
+import org.sopt.and.core.utils.KeyStorage.TOKEN
+import org.sopt.and.domain.entity.SignInModel
+import org.sopt.and.domain.repository.AuthRepository
+import org.sopt.and.feature.signin.model.SignInContract.SignInEvent
+import org.sopt.and.feature.signin.model.SignInContract.SignInSideEffect
+import org.sopt.and.feature.signin.model.SignInContract.SignInState
+import javax.inject.Inject
 
-class SignInViewModel(
-    private val sharedPreferences: SharedPreferences
-) : ViewModel() {
+@HiltViewModel
+class SignInViewModel @Inject constructor(
+    private val sharedPreferences: SharedPreferences,
+    private val authRepository: AuthRepository,
+    private val errorHandler: SignInErrorHandler
+) : BaseViewModel<SignInState, SignInSideEffect, SignInEvent>() {
 
-    private val _username = MutableStateFlow("")
-    val username: StateFlow<String> = _username
+    override fun createInitialState(): SignInState = SignInState()
 
-    private val _password = MutableStateFlow("")
-    val password: StateFlow<String> = _password
-
-    fun onUsernameChanged(newUsername: String) {
-        _username.value = newUsername
+    override suspend fun handleEvent(event: SignInEvent) {
+        when (event) {
+            is SignInEvent.UpdateUsername -> setState { copy(username = event.username) }
+            is SignInEvent.UpdatePassword -> setState { copy(password = event.password) }
+            is SignInEvent.SignIn -> signIn()
+        }
     }
 
-    fun onPasswordChanged(newPassword: String) {
-        _password.value = newPassword
+    private fun signIn() {
+        setState { copy(isLoading = true) }
+        viewModelScope.launch {
+            val request = SignInModel(uiState.value.username, uiState.value.password)
+            authRepository.signIn(request)
+                .onSuccess { token ->
+                    saveToken(token)
+                    setSideEffect { SignInSideEffect.NavigateToHome }
+                }
+                .onFailure { throwable ->
+                    val errorMessage = errorHandler.getSignInErrorMessage(throwable)
+                    setSideEffect { SignInSideEffect.ShowError(errorMessage) }
+                }
+        }
     }
 
     private fun saveToken(token: String) {
-        sharedPreferences?.edit()?.putString(TOKEN, token)?.apply()
-    }
-
-    fun signIn(
-        onSuccess: (String) -> Unit,
-        onFailure: (Int) -> Unit
-    ) {
-        val request = RequestSignInDto(username = _username.value, password = _password.value)
-
-        viewModelScope.launch {
-            runCatching {
-                authService.signIn(request)
-            }.onSuccess { response ->
-                if (response.result.token.isNotEmpty()) {
-                    val token = response.result.token
-                    saveToken(token)
-                    onSuccess(token)
-                } else {
-                    onFailure(R.string.sign_in_failure)
-                }
-            }.onFailure { throwable ->
-                val errorMessageId = handleSignInError(throwable)
-                onFailure(errorMessageId)
-            }
-        }
-    }
-
-    private fun handleSignInError(throwable: Throwable): Int {
-        return when (throwable) {
-            is HttpException -> {
-                val errorBody = throwable.response()?.errorBody()?.string()
-                val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
-                when (throwable.code()) {
-                    STATUS_CODE_400 -> when (errorCode) {
-                        ERROR_CODE_01 -> R.string.error_message_invalid_request_body
-                        ERROR_CODE_02 -> R.string.error_message_invalid_password
-                        else -> R.string.error_message_wrong_request
-                    }
-                    STATUS_CODE_403 -> R.string.error_message_wrong_password
-                    STATUS_CODE_404 -> R.string.error_message_invalid_url_request
-                    else -> R.string.error_message_server_error
-                }
-            }
-            is IOException -> R.string.error_message_network_error
-            else -> R.string.error_message_unexpected_error
-        }
+        sharedPreferences.edit()?.putString(TOKEN, token)?.apply()
     }
 }

@@ -13,7 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
 import org.sopt.and.R
-import org.sopt.and.model.BottomNavItem
+import org.sopt.and.feature.model.BottomNavItem
 
 @Composable
 fun BottomNavigation(

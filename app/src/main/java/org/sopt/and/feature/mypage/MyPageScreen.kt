@@ -30,25 +30,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import org.sopt.and.R
-import org.sopt.and.component.MyPageHistoryItem
-import org.sopt.and.component.MyPagePurchaseItem
-import org.sopt.and.utils.KeyStorage.AUTH_PREFS
-import org.sopt.and.utils.KeyStorage.TOKEN
+import org.sopt.and.core.component.MyPageHistoryItem
+import org.sopt.and.core.component.MyPagePurchaseItem
+import org.sopt.and.core.utils.KeyStorage.AUTH_PREFS
+import org.sopt.and.core.utils.KeyStorage.TOKEN
+import org.sopt.and.feature.mypage.model.MyPageContract.MyPageEvent
 
 @Composable
 fun MyPageScreen(
     modifier: Modifier = Modifier,
-    viewModel: MyPageViewModel = viewModel()
+    viewModel: MyPageViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences(AUTH_PREFS, Context.MODE_PRIVATE)
     val token = sharedPreferences.getString(TOKEN, "").orEmpty()
 
-    val hobby by viewModel.hobby.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-    viewModel.initHobby(token)
+    LaunchedEffect(Unit) {
+        val token = context.getSharedPreferences(AUTH_PREFS, Context.MODE_PRIVATE)
+            .getString(TOKEN, "").orEmpty()
+        viewModel.setEvent(MyPageEvent.LoadUserHobby(token))
+    }
 
     Column (
         modifier = Modifier
@@ -78,7 +83,7 @@ fun MyPageScreen(
             Spacer(modifier = Modifier.width(16.dp))
 
             Text(
-                text = hobby,
+                text = uiState.hobby,
                 fontSize = 18.sp,
                 color = Color.White,
                 modifier = Modifier.weight(1f)

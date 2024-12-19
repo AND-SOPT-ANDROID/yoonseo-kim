@@ -11,6 +11,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,27 +22,34 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import org.sopt.and.R
-import org.sopt.and.component.SignUpTopBar
-import org.sopt.and.component.SocialLoginItem
-import org.sopt.and.component.WavveCustomTextField
-import org.sopt.and.utils.toast
+import org.sopt.and.core.component.SignUpTopBar
+import org.sopt.and.core.component.SocialLoginItem
+import org.sopt.and.core.component.WavveCustomTextField
+import org.sopt.and.core.utils.context.toast
+import org.sopt.and.feature.signup.model.SignUpContract.SignUpSideEffect
+import org.sopt.and.feature.signup.model.SignUpContract.SignUpEvent
 
 @Composable
 fun SignUpScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     onSignUpSuccess: () -> Unit,
-    viewModel: SignUpViewModel = viewModel(),
+    viewModel: SignUpViewModel = hiltViewModel(),
 ) {
-    val username by viewModel.username.collectAsStateWithLifecycle()
-    val password by viewModel.password.collectAsStateWithLifecycle()
-    val hobby by viewModel.hobby.collectAsStateWithLifecycle()
-
+    val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(viewModel.sideEffect) {
+        viewModel.sideEffect.collect { effect ->
+            when (effect) {
+                is SignUpSideEffect.ShowToast -> context.toast(context.getString(effect.message))
+                SignUpSideEffect.NavigateToSignIn -> onSignUpSuccess()
+            }
+        }
+    }
 
     Column (
         modifier = Modifier
@@ -67,8 +76,8 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(30.dp))
 
         WavveCustomTextField(
-            value = username,
-            onValueChange = { viewModel.updateUsername(it) },
+            value = uiState.username,
+            onValueChange = { viewModel.setEvent(SignUpEvent.UpdateUsername(it)) },
             hint = stringResource(R.string.sign_up_username_hint)
         )
 
@@ -86,8 +95,8 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(40.dp))
 
         WavveCustomTextField(
-            value = password,
-            onValueChange = { viewModel.updatePassword(it) },
+            value = uiState.password,
+            onValueChange = { viewModel.setEvent(SignUpEvent.UpdatePassword(it)) },
             hint = stringResource(R.string.sign_up_password_hint),
             isPasswordField = true
         )
@@ -106,8 +115,8 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(30.dp))
 
         WavveCustomTextField(
-            value = hobby,
-            onValueChange = { viewModel.updateHobby(it) },
+            value = uiState.hobby,
+            onValueChange = { viewModel.setEvent(SignUpEvent.UpdateHobby(it)) },
             hint = stringResource(R.string.sign_up_hobby_hint)
         )
 
@@ -143,15 +152,7 @@ fun SignUpScreen(
 
         Button(
             onClick = {
-                viewModel.signUp(
-                    onSuccess = {
-                        onSignUpSuccess()
-                        context.toast(context.getString(R.string.sign_up_success))
-                    },
-                    onFailure = { errorMessageId ->
-                        context.toast(context.getString(errorMessageId))
-                    }
-                )
+                viewModel.setEvent(SignUpEvent.SignUp(uiState.username, uiState.password, uiState.hobby))
             },
             modifier = Modifier
                 .fillMaxWidth()

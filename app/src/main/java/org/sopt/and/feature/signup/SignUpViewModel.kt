@@ -1,98 +1,49 @@
 package org.sopt.and.feature.signup
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import org.sopt.and.R
-import org.sopt.and.api.ServicePool.authService
-import org.sopt.and.api.dto.request.RequestSignUpDto
-import org.sopt.and.api.dto.response.ResponseErrorDto
-import org.sopt.and.utils.KeyStorage.ERROR_CODE_00
-import org.sopt.and.utils.KeyStorage.ERROR_CODE_01
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_400
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_404
-import org.sopt.and.utils.KeyStorage.STATUS_CODE_409
-import org.sopt.and.utils.KeyStorage.TEXTFIELD_MAX_LENGTH
-import retrofit2.HttpException
-import java.io.IOException
+import org.sopt.and.core.component.BaseViewModel
+import org.sopt.and.core.error.SignUpErrorHandler
+import org.sopt.and.domain.entity.SignUpModel
+import org.sopt.and.domain.repository.AuthRepository
+import org.sopt.and.feature.signup.model.SignUpContract.SignUpEvent
+import org.sopt.and.feature.signup.model.SignUpContract.SignUpSideEffect
+import org.sopt.and.feature.signup.model.SignUpContract.SignUpState
+import javax.inject.Inject
 
-class SignUpViewModel : ViewModel() {
-    private val _username = MutableStateFlow("")
-    val username: StateFlow<String> = _username
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val errorHandler: SignUpErrorHandler
+) : BaseViewModel<SignUpState, SignUpSideEffect, SignUpEvent>() {
 
-    private val _password = MutableStateFlow("")
-    val password: StateFlow<String> = _password
+    override fun createInitialState(): SignUpState = SignUpState()
 
-    private val _hobby = MutableStateFlow("")
-    val hobby: StateFlow<String> = _hobby
-
-    fun updateUsername(newUsername: String) {
-        if (newUsername.length <= TEXTFIELD_MAX_LENGTH) {
-            _username.value = newUsername
+    override suspend fun handleEvent(event: SignUpEvent) {
+        when (event) {
+            is SignUpEvent.UpdateUsername -> setState { copy(username = event.username) }
+            is SignUpEvent.UpdatePassword -> setState { copy(password = event.password) }
+            is SignUpEvent.UpdateHobby -> setState { copy(hobby = event.hobby) }
+            is SignUpEvent.SignUp -> signUp()
         }
     }
 
-    fun updatePassword(newPassword: String) {
-        if (newPassword.length <= TEXTFIELD_MAX_LENGTH) {
-            _password.value = newPassword
-        }
-    }
-
-    fun updateHobby(newHobby: String) {
-        if (newHobby.length <= TEXTFIELD_MAX_LENGTH) {
-            _hobby.value = newHobby
-        }
-    }
-
-    private fun isValidUser(): Boolean {
-        return username.value.length <= TEXTFIELD_MAX_LENGTH &&
-                password.value.length <= TEXTFIELD_MAX_LENGTH &&
-                hobby.value.length <= TEXTFIELD_MAX_LENGTH
-    }
-
-    fun signUp(onSuccess: () -> Unit, onFailure: (Int) -> Unit) {
-        if (!isValidUser()) {
-            onFailure(R.string.error_message_invalid_user_info)
-            return
-        }
-
-        val request = RequestSignUpDto(
-            username = username.value,
-            password = password.value,
-            hobby = hobby.value
-        )
-
+    private fun signUp() {
+        setState { copy(isLoading = true) }
         viewModelScope.launch {
-            runCatching {
-                authService.signUp(request)
-            }.onSuccess {
-                onSuccess()
-            }.onFailure { throwable ->
-                val errorMessage = when (throwable) {
-                    is HttpException -> handleSignUpError(throwable)
-                    is IOException -> R.string.error_message_network_error
-                    else -> R.string.error_message_unexpected_error
+            val request = SignUpModel(
+                username = uiState.value.username,
+                password = uiState.value.password,
+                hobby = uiState.value.hobby
+            )
+            authRepository.signUp(request)
+                .onSuccess {
+                    setSideEffect { SignUpSideEffect.NavigateToSignIn }
+                }.onFailure { throwable ->
+                    val errorMessage = errorHandler.getSignUpErrorMessage(throwable)
+                    setSideEffect { SignUpSideEffect.ShowToast(errorMessage) }
                 }
-                onFailure(errorMessage)
-            }
-        }
-    }
-
-    private fun handleSignUpError(exception: HttpException): Int {
-        val errorBody = exception.response()?.errorBody()?.string()
-        val errorCode = errorBody?.let { Json.decodeFromString<ResponseErrorDto>(it).code }
-        return when (exception.code()) {
-            STATUS_CODE_400 -> when (errorCode) {
-                ERROR_CODE_00 -> R.string.error_message_invalid_request_body
-                ERROR_CODE_01 -> R.string.error_message_under_8_letters
-                else -> R.string.error_message_wrong_request
-            }
-            STATUS_CODE_404 -> R.string.error_message_invalid_url_request
-            STATUS_CODE_409 -> R.string.error_message_duplicate_username
-            else -> R.string.error_message_server_error
         }
     }
 }
