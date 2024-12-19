@@ -32,10 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.sopt.and.R
-import org.sopt.and.core.designsystem.component.MyPageHistoryItem
-import org.sopt.and.core.designsystem.component.MyPagePurchaseItem
+import org.sopt.and.core.component.MyPageHistoryItem
+import org.sopt.and.core.component.MyPagePurchaseItem
 import org.sopt.and.core.utils.KeyStorage.AUTH_PREFS
 import org.sopt.and.core.utils.KeyStorage.TOKEN
+import org.sopt.and.feature.mypage.model.MyPageContract.MyPageEvent
 
 @Composable
 fun MyPageScreen(
@@ -46,10 +47,12 @@ fun MyPageScreen(
     val sharedPreferences = context.getSharedPreferences(AUTH_PREFS, Context.MODE_PRIVATE)
     val token = sharedPreferences.getString(TOKEN, "").orEmpty()
 
-    val hobby by viewModel.hobby.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.initHobby(token)
+        val token = context.getSharedPreferences(AUTH_PREFS, Context.MODE_PRIVATE)
+            .getString(TOKEN, "").orEmpty()
+        viewModel.setEvent(MyPageEvent.LoadUserHobby(token))
     }
 
     Column (
@@ -80,7 +83,7 @@ fun MyPageScreen(
             Spacer(modifier = Modifier.width(16.dp))
 
             Text(
-                text = hobby,
+                text = uiState.hobby,
                 fontSize = 18.sp,
                 color = Color.White,
                 modifier = Modifier.weight(1f)

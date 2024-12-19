@@ -18,9 +18,9 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,14 +29,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import org.sopt.and.R
-import org.sopt.and.core.designsystem.component.SignInTopBar
-import org.sopt.and.core.designsystem.component.SocialLoginItem
-import org.sopt.and.core.designsystem.component.WavveCustomTextField
+import org.sopt.and.core.component.SignInTopBar
+import org.sopt.and.core.component.SocialLoginItem
+import org.sopt.and.core.component.WavveCustomTextField
 import org.sopt.and.core.utils.context.toast
 import org.sopt.and.core.utils.modifier.noRippleClickable
+import org.sopt.and.feature.signin.model.SignInContract.SignInSideEffect
+import org.sopt.and.feature.signin.model.SignInContract.SignInEvent
 
 @Composable
 fun SignInScreen(
@@ -45,13 +46,20 @@ fun SignInScreen(
     sharedPreferences: SharedPreferences,
     onSignUpClick: () -> Unit,
     onSignInSuccess: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: SignInViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val viewModel: SignInViewModel = hiltViewModel()
-    val username by viewModel.username.collectAsStateWithLifecycle()
-    val password by viewModel.password.collectAsStateWithLifecycle()
-    val scope = rememberCoroutineScope()
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(viewModel.sideEffect) {
+        viewModel.sideEffect.collect { effect ->
+            when (effect) {
+                is SignInSideEffect.ShowError -> context.toast(context.getString(effect.messageId))
+                SignInSideEffect.NavigateToHome -> onSignInSuccess()
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -72,16 +80,16 @@ fun SignInScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             WavveCustomTextField(
-                value = username,
-                onValueChange = viewModel::onUsernameChanged,
+                value = uiState.username,
+                onValueChange = { viewModel.setEvent(SignInEvent.UpdateUsername(it)) },
                 hint = stringResource(R.string.sign_in_username_hint)
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
             WavveCustomTextField(
-                value = password,
-                onValueChange = viewModel::onPasswordChanged,
+                value = uiState.password,
+                onValueChange = { viewModel.setEvent(SignInEvent.UpdatePassword(it)) },
                 hint = stringResource(R.string.sign_in_password_hint),
                 isPasswordField = true
             )
@@ -89,17 +97,7 @@ fun SignInScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
-                onClick = {
-                    viewModel.signIn(
-                        onSuccess = {
-                            onSignInSuccess()
-                            context.toast(context.getString(R.string.sign_in_success))
-                        },
-                        onFailure = { errorMessageId ->
-                            context.toast(context.getString(errorMessageId))
-                        }
-                    )
-                },
+                onClick = { viewModel.setEvent(SignInEvent.SignIn(uiState.username, uiState.password)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)

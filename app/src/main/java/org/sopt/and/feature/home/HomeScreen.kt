@@ -15,11 +15,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
-import org.sopt.and.core.designsystem.component.AutoSlidingRow
-import org.sopt.and.core.designsystem.component.HomeTopBar
-import org.sopt.and.core.designsystem.component.RecommendationRow
-import org.sopt.and.core.designsystem.component.TabMenu
-import org.sopt.and.core.designsystem.component.TodayTop20Row
+import org.sopt.and.core.component.AutoSlidingRow
+import org.sopt.and.core.component.HomeTopBar
+import org.sopt.and.core.component.RecommendationRow
+import org.sopt.and.core.component.TabMenu
+import org.sopt.and.core.component.TodayTop20Row
 
 @Composable
 fun HomeScreen(
