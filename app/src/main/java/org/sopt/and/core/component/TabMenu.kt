@@ -1,4 +1,4 @@
-package org.sopt.and.core.designsystem.component
+package org.sopt.and.core.component
 
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab

@@ -1,4 +1,4 @@
-package org.sopt.and.core.designsystem.component
+package org.sopt.and.core.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
